@@ -1,28 +1,6 @@
 Partlist exported from /Users/sparky/Projects/eagle/synth-a-phone/hardware/v1.0/synth-a-phone-v1.0.sch at 2011-11-15 22:35
 
 Qty Value              Device                Parts                                              
-10                     PINHD-1X1             ERASE, JP2, JP3, JP4, JTAG, TCK, TDI, TDO, TMS, TST
-1                      PINHD-2X5             JP1                                                
-1                      PN61729               X1                                                 
-2   ICSP               PINHD-2X3             ICSP1, ICSP2                                       
-
-1                      SJ                    UBOOT                                              
-7                      SOLDERJUMPER_2WAYS    SJ1, SJ2, SJ3, SJ4, SJ5, SJ6, SJ7                  
-
-3                      TAC_SWITCHPTH         S1, S2, S3                                         
-2   AUDIO-JACKPTH      AUDIO-JACKPTH         J1, J2                                             
-1   POWER_JACKPTH      POWER_JACKPTH         9VDC_POWER                                         
-
-2   0.001uF            C-USC0603             C14, C15                                           
-2   0.01uF             C-USC0603             C10, C11                                           
-10  0.1uF              C-USC0603             C3, C6, C8, C22, C23, C29, C34, C36, C37, C38      
-2   1uF                CPOL-USSMCA           C2, C5                                             
-2   4.7uF              CPOL-USSMCA           C18, C19                                           
-2   10pF               C-USC0603             C1, C20                                            
-6   10uF               CPOL-USSMCA           C4, C7, C9, C24, C35, C39                          
-8   18pF               C-USC0603             C25, C26, C27, C28, C30, C31, C32, C33             
-4   470pF              C-USC0603             C12, C13, C16, C17                                 
-
 2   4.64K              R-US_R0603            R15, R17                                           
 1   6K8                R-US_R0603            R24                                                
 2   10.7K              R-US_R0603            R12, R14                                           
@@ -35,11 +13,20 @@ Qty Value              Device                Parts
 2   100                R-US_R0603            R22, R23                                           
 2   274K               R-US_R0603            R11, R13                                           
 5   470                R-US_R0603            R2, R3, R4, R36, R37      
-2   1K                 R-US_R0603            R9, R10                                            
+6   1K                 R-US_R0603            R9, R10, R6, R7, R33, R35                                              
 7   1M                 R-US_R0603            R1, R19, R20, R25, R26, R32, R34                   
-4   1k                 R-US_R0603            R6, R7, R33, R35                                   
 
 6   Volume             VACOLOCO_EVUFRK09_POT POT1, POT2, POT3, POT4, VOL1, VOL2                 
+
+2   0.001uF            C-USC0603             C14, C15                                           
+2   0.01uF             C-USC0603             C10, C11                                           
+10  0.1uF              C-USC0603             C3, C6, C8, C22, C23, C29, C34, C36, C37, C38      
+2   1uF                CPOL-USSMCA           C2, C5                                             
+2   4.7uF              CPOL-USSMCA           C18, C19                                           
+2   10pF               C-USC0603             C1, C20                                            
+6   10uF               CPOL-USSMCA           C4, C7, C9, C24, C35, C39                          
+8   18pF               C-USC0603             C25, C26, C27, C28, C30, C31, C32, C33             
+4   470pF              C-USC0603             C12, C13, C16, C17                                 
 
 1   BLM21              WE-CBF_0805           L1                                                 
 
@@ -58,4 +45,14 @@ Qty Value              Device                Parts
 1   AD7302SMD          AD7302SMD             IC4                                                
 1   ATMEGA32U2-TQFP    ATMEGA32U2-TQFP       IC8                                                
 1   ATSAM3U4ELQFP-144  ATSAM3U4ELQFP-144     IC7                                                
-1   AVR_ATMEGA328V-10A AVR_ATMEGA328V-10A    IC9                                                
+1   AVR_ATMEGA328V-10A AVR_ATMEGA328V-10A    IC9   
+
+3                      TAC_SWITCHPTH         S1, S2, S3                                         
+2   AUDIO-JACKPTH      AUDIO-JACKPTH         J1, J2                                             
+1   POWER_JACKPTH      POWER_JACKPTH         9VDC_POWER                                         
+
+10                     PINHD-1X1             ERASE, JP2, JP3, JP4, JTAG, TCK, TDI, TDO, TMS, TST
+1                      PINHD-2X5             JP1                                                
+1                      PN61729               X1                                                 
+2   ICSP               PINHD-2X3             ICSP1, ICSP2                                       
+                                             
