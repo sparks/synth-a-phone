@@ -1,0 +1,143 @@
+Partlist exported from /Users/sparky/Projects/eagle/synth-a-phone/hardware/v1.0/synth-a-phone-v1.0.sch at 2011-11-15 22:30
+
+Part       Value              Device                Package          Description                                    
+9VDC_POWER POWER_JACKPTH      POWER_JACKPTH         POWER_JACK_PTH   Power Jack                                     
+C1         10pF               C-USC0603             C0603            CAPACITOR, American symbol                     
+C2         1uF                CPOL-USSMCA           SMC_A            POLARIZED CAPACITOR, American symbol           
+C3         0.1uF              C-USC0603             C0603            CAPACITOR, American symbol                     
+C4         10uF               CPOL-USSMCA           SMC_A            POLARIZED CAPACITOR, American symbol           
+C5         1uF                CPOL-USSMCA           SMC_A            POLARIZED CAPACITOR, American symbol           
+C6         0.1uF              C-USC0603             C0603            CAPACITOR, American symbol                     
+C7         10uF               CPOL-USSMCA           SMC_A            POLARIZED CAPACITOR, American symbol           
+C8         0.1uF              C-USC0603             C0603            CAPACITOR, American symbol                     
+C9         10uF               CPOL-USSMCA           SMC_A            POLARIZED CAPACITOR, American symbol           
+C10        0.01uF             C-USC0603             C0603            CAPACITOR, American symbol                     
+C11        0.01uF             C-USC0603             C0603            CAPACITOR, American symbol                     
+C12        470pF              C-USC0603             C0603            CAPACITOR, American symbol                     
+C13        470pF              C-USC0603             C0603            CAPACITOR, American symbol                     
+C14        0.001uF            C-USC0603             C0603            CAPACITOR, American symbol                     
+C15        0.001uF            C-USC0603             C0603            CAPACITOR, American symbol                     
+C16        470pF              C-USC0603             C0603            CAPACITOR, American symbol                     
+C17        470pF              C-USC0603             C0603            CAPACITOR, American symbol                     
+C18        4.7uF              CPOL-USSMCA           SMC_A            POLARIZED CAPACITOR, American symbol           
+C19        4.7uF              CPOL-USSMCA           SMC_A            POLARIZED CAPACITOR, American symbol           
+C20        10pF               C-USC0603             C0603            CAPACITOR, American symbol                     
+C21        22k                R-US_R0603            R0603            RESISTOR, American symbol                      
+C22        0.1uF              C-USC0603             C0603            CAPACITOR, American symbol                     
+C23        0.1uF              C-USC0603             C0603            CAPACITOR, American symbol                     
+C24        10uF               CPOL-USSMCA           SMC_A            POLARIZED CAPACITOR, American symbol           
+C25        18pF               C-USC0603             C0603            CAPACITOR, American symbol                     
+C26        18pF               C-USC0603             C0603            CAPACITOR, American symbol                     
+C27        18pF               C-USC0603             C0603            CAPACITOR, American symbol                     
+C28        18pF               C-USC0603             C0603            CAPACITOR, American symbol                     
+C29        0.1uF              C-USC0603             C0603            CAPACITOR, American symbol                     
+C30        18pF               C-USC0603             C0603            CAPACITOR, American symbol                     
+C31        18pF               C-USC0603             C0603            CAPACITOR, American symbol                     
+C32        18pF               C-USC0603             C0603            CAPACITOR, American symbol                     
+C33        18pF               C-USC0603             C0603            CAPACITOR, American symbol                     
+C34        0.1uF              C-USC0603             C0603            CAPACITOR, American symbol                     
+C35        10uF               CPOL-USSMCA           SMC_A            POLARIZED CAPACITOR, American symbol           
+C36        0.1uF              C-USC0603             C0603            CAPACITOR, American symbol                     
+C37        0.1uF              C-USC0603             C0603            CAPACITOR, American symbol                     
+C38        0.1uF              C-USC0603             C0603            CAPACITOR, American symbol                     
+C39        10uF               CPOL-USSMCA           SMC_A            POLARIZED CAPACITOR, American symbol           
+D1         M7                 DIODE-SMB             SMB              DIODE                                          
+D2         M7                 DIODE-SMB             SMB              DIODE                                          
+D3         M7                 DIODE-SMB             SMB              DIODE                                          
+ERASE                         PINHD-1X1             1X01             Pin header 1x1 for 0.1" spacing                
+F1         500mA              L-EUL1812             L1812            INDUCTOR, European symbol                      
+IC1        MCP4921MSOP8       MCP4921MSOP8          MSOP8                                                           
+IC2        LP2950             LP2950                DPACK            100 mA, Low Power Low Dropout Voltage Regulator
+IC3        LP2950             LP2950                DPACK            100 mA, Low Power Low Dropout Voltage Regulator
+IC4        AD7302SMD          AD7302SMD             TSSOP20          AD7302                                         
+IC5        MCP6002MSOP8       MCP6002MSOP8          MSOP8            Dual Op Amp                                    
+IC6        MCP6002MSOP8       MCP6002MSOP8          MSOP8            Dual Op Amp                                    
+IC7        ATSAM3U4ELQFP-144  ATSAM3U4ELQFP-144     SQFP-S-20X20-144                                                
+IC8        ATMEGA32U2-TQFP    ATMEGA32U2-TQFP       TQFP32-08        ATmega32u2                                     
+IC9        AVR_ATMEGA328V-10A AVR_ATMEGA328V-10A    AVR_TQFP32-08    MICROCONTROLLER                                
+ICSP1      ICSP               PINHD-2X3             2X03             PIN HEADER                                     
+ICSP2      ICSP               PINHD-2X3             2X03             PIN HEADER                                     
+J1         AUDIO-JACKPTH      AUDIO-JACKPTH         AUDIO-JACK       3.5mm Audio Jack                               
+J2         AUDIO-JACKPTH      AUDIO-JACKPTH         AUDIO-JACK       3.5mm Audio Jack                               
+JP1                           PINHD-2X5             2X05             PIN HEADER                                     
+JP2                           PINHD-1X1             1X01             Pin header 1x1 for 0.1" spacing                
+JP3                           PINHD-1X1             1X01             Pin header 1x1 for 0.1" spacing                
+JP4                           PINHD-1X1             1X01             Pin header 1x1 for 0.1" spacing                
+JTAG                          PINHD-1X1             1X01             Pin header 1x1 for 0.1" spacing                
+L1         BLM21              WE-CBF_0805           0805             SMD EMI Suppression Ferrite Beads              
+POT1       Volume             VACOLOCO_EVUFRK09_POT VACOLOCO_EVUF    Panasonic EVUF type potentionmeter             
+POT2       Volume             VACOLOCO_EVUFRK09_POT VACOLOCO_EVUF    Panasonic EVUF type potentionmeter             
+POT3       Volume             VACOLOCO_EVUFRK09_POT VACOLOCO_EVUF    Panasonic EVUF type potentionmeter             
+POT4       Volume             VACOLOCO_EVUFRK09_POT VACOLOCO_EVUF    Panasonic EVUF type potentionmeter             
+Q1         CSM-7X-DU          CSM-7X-DU             CSM-7X-DU        SMD CRYSTAL                                    
+Q2         CSM-7X-DU          CSM-7X-DU             CSM-7X-DU        SMD CRYSTAL                                    
+Q3         CSM-7X-DU          CSM-7X-DU             CSM-7X-DU        SMD CRYSTAL                                    
+Q4         CSM-7X-DU          CSM-7X-DU             CSM-7X-DU        SMD CRYSTAL                                    
+R1         1M                 R-US_R0603            R0603            RESISTOR, American symbol                      
+R2         470                R-US_R0603            R0603            RESISTOR, American symbol                      
+R3         470                R-US_R0603            R0603            RESISTOR, American symbol                      
+R4         470                R-US_R0603            R0603            RESISTOR, American symbol                      
+R5         10k                R-US_R0603            R0603            RESISTOR, American symbol                      
+R6         1k                 R-US_R0603            R0603            RESISTOR, American symbol                      
+R7         1k                 R-US_R0603            R0603            RESISTOR, American symbol                      
+R8         10k                R-US_R0603            R0603            RESISTOR, American symbol                      
+R9         1K                 R-US_R0603            R0603            RESISTOR, American symbol                      
+R10        1K                 R-US_R0603            R0603            RESISTOR, American symbol                      
+R11        274K               R-US_R0603            R0603            RESISTOR, American symbol                      
+R12        10.7K              R-US_R0603            R0603            RESISTOR, American symbol                      
+R13        274K               R-US_R0603            R0603            RESISTOR, American symbol                      
+R14        10.7K              R-US_R0603            R0603            RESISTOR, American symbol                      
+R15        4.64K              R-US_R0603            R0603            RESISTOR, American symbol                      
+R16        23.7K              R-US_R0603            R0603            RESISTOR, American symbol                      
+R17        4.64K              R-US_R0603            R0603            RESISTOR, American symbol                      
+R18        23.7K              R-US_R0603            R0603            RESISTOR, American symbol                      
+R19        1M                 R-US_R0603            R0603            RESISTOR, American symbol                      
+R20        1M                 R-US_R0603            R0603            RESISTOR, American symbol                      
+R21        15k                R-US_R0603            R0603            RESISTOR, American symbol                      
+R22        100                R-US_R0603            R0603            RESISTOR, American symbol                      
+R23        100                R-US_R0603            R0603            RESISTOR, American symbol                      
+R24        6K8                R-US_R0603            R0603            RESISTOR, American symbol                      
+R25        1M                 R-US_R0603            R0603            RESISTOR, American symbol                      
+R26        1M                 R-US_R0603            R0603            RESISTOR, American symbol                      
+R27        39 +-1%            R-US_R0603            R0603            RESISTOR, American symbol                      
+R28        39 +-1%            R-US_R0603            R0603            RESISTOR, American symbol                      
+R29        10k                R-US_R0603            R0603            RESISTOR, American symbol                      
+R30        22                 R-US_R0603            R0603            RESISTOR, American symbol                      
+R31        22                 R-US_R0603            R0603            RESISTOR, American symbol                      
+R32        1M                 R-US_R0603            R0603            RESISTOR, American symbol                      
+R33        1k                 R-US_R0603            R0603            RESISTOR, American symbol                      
+R34        1M                 R-US_R0603            R0603            RESISTOR, American symbol                      
+R35        1k                 R-US_R0603            R0603            RESISTOR, American symbol                      
+R36        470                R-US_R0603            R0603            RESISTOR, American symbol                      
+R37        470                R-US_R0603            R0603            RESISTOR, American symbol                      
+R38        10k                R-US_R0603            R0603            RESISTOR, American symbol                      
+RX         YELLOW             LEDCHIP-LED0805       CHIP-LED0805     LED                                            
+RX1        YELLOW             LEDCHIP-LED0805       CHIP-LED0805     LED                                            
+RX2        YELLOW             LEDCHIP-LED0805       CHIP-LED0805     LED                                            
+RX3        YELLOW             LEDCHIP-LED0805       CHIP-LED0805     LED                                            
+S1                            TAC_SWITCHPTH         TACTILE-PTH      Momentary Switch                               
+S2                            TAC_SWITCHPTH         TACTILE-PTH      Momentary Switch                               
+S3                            TAC_SWITCHPTH         TACTILE-PTH      Momentary Switch                               
+SJ1                           SOLDERJUMPER_2WAYS    SJ_3             Solder Jumper                                  
+SJ2                           SOLDERJUMPER_2WAYS    SJ_3             Solder Jumper                                  
+SJ3                           SOLDERJUMPER_2WAYS    SJ_3             Solder Jumper                                  
+SJ4                           SOLDERJUMPER_2WAYS    SJ_3             Solder Jumper                                  
+SJ5                           SOLDERJUMPER_2WAYS    SJ_3             Solder Jumper                                  
+SJ6                           SOLDERJUMPER_2WAYS    SJ_3             Solder Jumper                                  
+SJ7                           SOLDERJUMPER_2WAYS    SJ_3             Solder Jumper                                  
+TCK                           PINHD-1X1             1X01             Pin header 1x1 for 0.1" spacing                
+TDI                           PINHD-1X1             1X01             Pin header 1x1 for 0.1" spacing                
+TDO                           PINHD-1X1             1X01             Pin header 1x1 for 0.1" spacing                
+TMS                           PINHD-1X1             1X01             Pin header 1x1 for 0.1" spacing                
+TST                           PINHD-1X1             1X01             Pin header 1x1 for 0.1" spacing                
+TX         YELLOW             LEDCHIP-LED0805       CHIP-LED0805     LED                                            
+UBOOT                         SJ                    SJ               SMD solder JUMPER                              
+VOL1       Volume             VACOLOCO_EVUFRK09_POT VACOLOCO_EVUF    Panasonic EVUF type potentionmeter             
+VOL2       Volume             VACOLOCO_EVUFRK09_POT VACOLOCO_EVUF    Panasonic EVUF type potentionmeter             
+X1                            PN61729               PN61729          BERG USB connector                             
+Y1         16MHz              RESONATORMU           RESONATOR                                                       
+Y2         16MHz              RESONATORMU           RESONATOR                                                       
+Y3         16MHz              RESONATORMU           RESONATOR                                                       
+Y4         16MHz              RESONATORMU           RESONATOR                                                       
+Z1         PGB1010604         VARISTORCN0603        CT/CN0603        VARISTOR                                       
+Z2         PGB1010604         VARISTORCN0603        CT/CN0603        VARISTOR                                       
