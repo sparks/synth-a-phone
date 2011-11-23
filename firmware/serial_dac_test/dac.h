@@ -10,8 +10,8 @@
 #define DAC_CONF 0x30
 
 void dac_init(void);
-void dac8(uint8_t data);
-void dac12(uint16_t data);
-void dac_split(uint8_t data1, uint8_t data2);
+void dac8(uint8_t);
+void dac12(uint16_t);
+void dac_split(uint8_t, uint8_t);
 
 #endif

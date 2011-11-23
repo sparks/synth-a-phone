@@ -1,5 +1,6 @@
 #include "main.h"
 #include "dac.h"
+#include "adc.h"
 
 #include <avr/io.h>
 #include <avr/interrupt.h>
@@ -11,8 +12,9 @@
 uint8_t sintable[RESOLUTION]; //sin 8bit
 // uint16_t sintable[RESOLUTION]; //sin 12bit
 
-int main() {
+int main(void) {
 	dac_init();
+	adc_init();
 
 	//sin 8bit
 	/*uint8_t i;
@@ -49,13 +51,16 @@ int main() {
 	}*/
 
 	//triangle 8bit
-	/*uint8_t i;
+	uint8_t i, k;
+	k = 1;
 
 	for(;;) {
-		for(i = 0;i < 0xFF;i++) {
+		for(i = 0;i < 0xFF;i += k) {
 			dac8(i);
+			if(get_val() > 0x7F) k = 3;
+			else k = 1;
 		}
-	}*/
+	}
 
 	//triangle 12bit (faster)
 	/*uint8_t i, j;

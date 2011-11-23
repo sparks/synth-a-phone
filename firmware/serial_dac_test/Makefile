@@ -20,7 +20,7 @@ PROGRAMMER = -c usbasp -P usb
 FUSES      = -U efuse:w:0x07:m -U hfuse:w:0xD9:m -U lfuse:w:0xDF:m
 
 NAME       = main
-OBJECTS    = $(NAME).o dac.o
+OBJECTS    = $(NAME).o dac.o adc.o
 
 # Tune the lines below only if you know what you are doing:
 
