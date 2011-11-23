@@ -18,7 +18,9 @@ DEVICE     = atmega328
 CLOCK      = 20000000
 PROGRAMMER = -c usbasp -P usb
 FUSES      = -U efuse:w:0x07:m -U hfuse:w:0xD9:m -U lfuse:w:0xDF:m
-OBJECTS    = main.o
+
+NAME       = main
+OBJECTS    = $(NAME).o dac.o
 
 # Tune the lines below only if you know what you are doing:
 
@@ -26,7 +28,7 @@ AVRDUDE = avrdude $(PROGRAMMER) -p $(DEVICE)
 COMPILE = avr-gcc -Wall -Os -DF_CPU=$(CLOCK) -mmcu=$(DEVICE)
 
 # symbolic targets:
-all:	main.hex
+all:	$(NAME).hex
 
 .c.o:
 	$(COMPILE) -c $< -o $@
@@ -42,34 +44,27 @@ all:	main.hex
 	$(COMPILE) -S $< -o $@
 
 flash:	all
-	$(AVRDUDE) -U flash:w:main.hex:i
+	$(AVRDUDE) -U flash:w:$(NAME).hex:i
 
 fuse:
 	$(AVRDUDE) $(FUSES)
 
 # Xcode uses the Makefile targets "", "clean" and "install"
-install: flash fuse
-
-# if you use a bootloader, change the command below appropriately:
-load: all
-	bootloadHID main.hex
+install: flash
 
 clean:
-	rm -f main.hex main.elf $(OBJECTS)
+	rm -f $(NAME).hex $(NAME).elf $(OBJECTS)
 
 # file targets:
-main.elf: $(OBJECTS)
-	$(COMPILE) -o main.elf $(OBJECTS)
+$(NAME).elf: $(OBJECTS)
+	$(COMPILE) -o $(NAME).elf $(OBJECTS)
 
-main.hex: main.elf
-	rm -f main.hex
-	avr-objcopy -j .text -j .data -O ihex main.elf main.hex
+$(NAME).hex: $(NAME).elf
+	rm -f $(NAME).hex
+	avr-objcopy -j .text -j .data -O ihex $(NAME).elf $(NAME).hex
 # If you have an EEPROM section, you must also create a hex file for the
 # EEPROM and add it to the "flash" target.
 
 # Targets for code debugging and analysis:
-disasm:	main.elf
-	avr-objdump -d main.elf
-
-cpp:
-	$(COMPILE) -E main.c
+disasm:	$(NAME).elf
+	avr-objdump -d $(NAME).elf
