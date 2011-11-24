@@ -1,4 +1,4 @@
-#ifndef MAIN
+#ifndef SYNTH_MAIN
 
 
 #endif

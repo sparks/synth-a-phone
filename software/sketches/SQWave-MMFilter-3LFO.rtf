@@ -7,9 +7,9 @@
 
 \f0\fs18 \cf2 Help\cf0 .gui;\
 \
-(\
-	s.reboot;\
-	\
+s.reboot;\
+\
+(	\
 	\cf2 SynthDef\cf0 .new(\cf3 "lfo"\cf0 , \{ \cf2 arg\cf0  out = 0, freq = 10, gain = 0.1;\
 		\cf2 Out\cf0 .kr(\
 			out,\
@@ -40,6 +40,8 @@
 			)!2\
 		) \
 	\}).send(s);\
+)\
+(\
 	\
 		\
 	~emptybus = \cf2 Bus\cf0 .control(s, 1);\
@@ -119,6 +121,11 @@
 	~rec[3].action = \{\cf2 arg\cf0  b; ~synth.set(\cf3 "center_gate3"\cf0 , b.value);\};\
 	~rec[4].action = \{\cf2 arg\cf0  b; ~synth.set(\cf3 "gain_gate3"\cf0 , b.value);\};\
 	\
+	~win.front();\
+	\
+)\
+	\
+(\
 	\cf2 MIDIClient\cf0 .init;\
 	\
 	\cf2 MIDIIn\cf0 .findPort(\cf3 "nanoKONTROL2"\cf0 , \cf3 "SLIDER/KNOB"\cf0 );\
@@ -158,9 +165,7 @@
 					\{\{k.valueAction = 1\}.defer\};\
 			\};\
 		\});\
-	\};\
-	\
-	~win.front();\
+	\};	\
 )\
 \
 \cf4 //MIDIIn.noteOff = \{ arg src, chan, num, vel; 	[chan,num,vel / 127].postln; \};\cf0 \

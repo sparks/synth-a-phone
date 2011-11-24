@@ -1,4 +1,4 @@
-#ifndef DAC
+#ifndef SYNTH_DAC
 
 #include <avr/io.h>
 
