@@ -1,4 +1,5 @@
 #ifndef SYNTH_DAC
+#define SYNTH_DAC
 
 #include <avr/io.h>
 
@@ -10,8 +11,7 @@
 #define DAC_CONF 0x30
 
 void dac_init(void);
-void dac8(uint8_t);
-void dac12(uint16_t);
-void dac_split(uint8_t, uint8_t);
+
+void serial_dac(uint16_t);
 
 #endif

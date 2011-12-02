@@ -1,9 +1,12 @@
 #ifndef SYNTH_ADC
+#define SYNTH_ADC
 
 #include <avr/io.h>
 
+#define ADC_ERROR 0xFFFF
+
 void adc_init(void);
-uint8_t get_val8(void);
-uint16_t get_val12(void);
+
+uint16_t adc_val(uint8_t);
 
 #endif

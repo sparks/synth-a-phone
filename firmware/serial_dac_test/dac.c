@@ -1,59 +1,96 @@
 #include "dac.h"
 
 #include <util/delay.h>
+#include <avr/interrupt.h>
+
+enum state {
+	IDLE,
+	FIRST_BYTE,
+	SECOND_BYTE
+};
+
+enum state current_state = IDLE;
+
+uint8_t buffer_flag = 0;
+
+uint8_t data[2];
+uint8_t buffer[2];
 
 void dac_init(void) {
 	DDRB |= (1 << DAC_LDAC) | (1 << DAC_DIN) | (1 << DAC_CS) | (1 << DAC_SCK);
 	PORTB |= (1 << DAC_LDAC) | (0 << DAC_DIN) | (1 << DAC_CS) | (0 << DAC_SCK);
 
-	SPCR = (0 << SPIE) | (1 << SPE) | (0 << DORD) | (1 << MSTR) | (0 << CPOL) | (0 << CPHA) | (0 << SPR1) | (0 << SPR0);
+	SPCR = (1 << SPIE) | (1 << SPE) | (0 << DORD) | (1 << MSTR) | (0 << CPOL) | (0 << CPHA) | (0 << SPR1) | (0 << SPR0);
 	SPSR = (1 << SPI2X);
 }
 
-void dac8(uint8_t data) {
-	PORTB &= ~(1 << DAC_CS); //CS low
+void serial_dac(uint16_t value) {
+	// PORTB &= ~(1 << DAC_CS); //CS low
 
-	SPDR = DAC_CONF | (data & 0xF0) >> 4;
-	while((SPSR & (1 << SPIF)) == 0);
+	// data[0] = value & 0xFF;
+	// data[1] = (value & 0xF00) >> 8;
 
-	SPDR = (data & 0x0F) << 4;
-	while((SPSR & (1 << SPIF)) == 0);
+	// SPDR = DAC_CONF | data[1];
+	// while((SPSR & (1 << SPIF)) == 0);
 
-	PORTB |= (1 << DAC_CS); //CS high
+	// SPDR = data[0];
+	// while((SPSR & (1 << SPIF)) == 0);
+	
+	// PORTB |= (1 << DAC_CS); //CS high
 
-	PORTB &= ~(1 << DAC_LDAC); //LDAC low
-	_delay_us(1); //min LDAC pulse width
-	PORTB |= (1 << DAC_LDAC); //LDAC high
+	// PORTB &= ~(1 << DAC_LDAC); //LDAC low
+	// _delay_us(1); //min LDAC pulse width
+	// PORTB |= (1 << DAC_LDAC); //LDAC high
+
+
+	if(current_state == IDLE) {
+		PORTB &= ~(1 << DAC_CS); //CS low
+
+		data[0] = value & 0xFF;
+		data[1] = (value & 0xF00) >> 8;
+
+		SPDR = DAC_CONF | data[1];
+
+		current_state = FIRST_BYTE;
+	} else {
+		buffer_flag = 1;
+
+		buffer[0] = value & 0xFF;
+		buffer[1] = (value & 0xF00) >> 8;
+	}
 }
 
-void dac12(uint16_t data) {
-	PORTB &= ~(1 << DAC_CS); //CS low
+ISR(SPI_STC_vect) {
+	cli();
 
-	SPDR = DAC_CONF | (data & 0xF00) >> 8;
-	while((SPSR & (1 << SPIF)) == 0);
+	if(current_state == FIRST_BYTE) {
+		SPDR = data[0];
 
-	SPDR = (data & 0xFF);
-	while((SPSR & (1 << SPIF)) == 0);
+		current_state = SECOND_BYTE;
 
-	PORTB |= (1 << DAC_CS); //CS high
+	} else if(current_state == SECOND_BYTE) {
+		PORTB |= (1 << DAC_CS); //CS high
 
-	PORTB &= ~(1 << DAC_LDAC); //LDAC low
-	_delay_us(1); //min LDAC pulse width
-	PORTB |= (1 << DAC_LDAC); //LDAC high
-}
+		PORTB &= ~(1 << DAC_LDAC); //LDAC low
+		_delay_us(1); //min LDAC pulse width
+		PORTB |= (1 << DAC_LDAC); //LDAC high
 
-void dac_split(uint8_t data1, uint8_t data2) {
-	PORTB &= ~(1 << DAC_CS); //CS low
+		if(buffer_flag) {
+			buffer_flag = 0;
 
-	SPDR = DAC_CONF | (data1 & 0x0F);
-	while((SPSR & (1 << SPIF)) == 0);
+			PORTB &= ~(1 << DAC_CS); //CS low
 
-	SPDR = (data2 & 0xFF);
-	while((SPSR & (1 << SPIF)) == 0);
+			data[0] = buffer[0];
+			data[1] = buffer[1];
 
-	PORTB |= (1 << DAC_CS); //CS high
+			SPDR = DAC_CONF | data[1];
 
-	PORTB &= ~(1 << DAC_LDAC); //LDAC low
-	_delay_us(1); //min LDAC pulse width
-	PORTB |= (1 << DAC_LDAC); //LDAC high
+			current_state = FIRST_BYTE;
+		} else {
+			current_state = IDLE;
+		}
+
+	}
+
+	sei();
 }

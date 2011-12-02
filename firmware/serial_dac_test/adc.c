@@ -2,34 +2,41 @@
 
 #include <avr/interrupt.h>
 
-#define ADC4_MUX 0x04
-#define ADC5_MUX 0x05
-#define ADC6_MUX 0x06
+#define MUX_MIN 4
+#define MUX_MAX 7
+#define MUX_LEN MUX_MAX-MUX_MIN
 
-uint16_t input12;
-uint8_t input8;
+uint8_t mux_pointer = MUX_MIN;
+uint16_t latest_values[MUX_LEN];
 
 void adc_init(void) {
-	DDRC &= ~((1 << PC4) | (1 << PC5) | (1 << PC6));
+	uint8_t i;
+	for(i = 0;i < MUX_LEN;i++) {
+		DDRC &= ~(1 << (i+MUX_MIN));
+		latest_values[i] = 0;
+	}
 
-	ADMUX = (1 << REFS0) | (0 << ADLAR) | ADC5_MUX;
+	ADMUX = (1 << REFS0) | (0 << ADLAR) | mux_pointer;
 	ADCSRA = (1 << ADEN) | (1 << ADIE) | (1 << ADPS2) | (1 << ADPS1) | (1 << ADPS0);
 
-	sei();  //enable global interrupt
 	ADCSRA |= (1 << ADSC); //Trigger first sequence
 }
 
-uint8_t get_val8(void) {
-	return input8;
-}
-
-uint16_t get_val12(void) {
-	return input12;
+uint16_t adc_val(uint8_t mux) {
+	if(mux < MUX_LEN) return latest_values[mux];
+	else return ADC_ERROR;
 }
 
 ISR(ADC_vect) {
-	input12 = ADCL;
-	input12 |= ADCH << 8;
-	input8 = input12 >> 2;
-	ADCSRA |= (1 << ADSC); //Trigger first sequence
+	latest_values[mux_pointer-MUX_MIN] = ADCL;
+	latest_values[mux_pointer-MUX_MIN] |= ADCH << 8;
+
+	if(mux_pointer+1 < MUX_MAX) mux_pointer++;
+	else mux_pointer = MUX_MIN;
+
+	ADMUX &= ~(0xF);
+	ADMUX |= mux_pointer;
+
+
+	ADCSRA |= (1 << ADSC); //Trigger sequence
 }
