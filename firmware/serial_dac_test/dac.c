@@ -50,6 +50,8 @@ void serial_dac(uint16_t value) {
 		data[0] = value & 0xFF;
 		data[1] = (value & 0xF00) >> 8;
 
+		current_state = FIRST_BYTE;
+
 		SPDR = DAC_CONF | data[1];
 	} else {
 		buffer_flag = 1;
@@ -83,6 +85,8 @@ ISR(SPI_STC_vect) {
 
 			data[0] = buffer[0];
 			data[1] = buffer[1];
+
+			current_state = FIRST_BYTE;
 
 			SPDR = DAC_CONF | data[1];
 		} else {
