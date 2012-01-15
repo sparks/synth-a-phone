@@ -42,16 +42,15 @@ void serial_dac(uint16_t value) {
 	// _delay_us(1); //min LDAC pulse width
 	// PORTB |= (1 << DAC_LDAC); //LDAC high
 
-
 	if(current_state == IDLE) {
+		current_state = FIRST_BYTE;
+		
 		PORTB &= ~(1 << DAC_CS); //CS low
 
 		data[0] = value & 0xFF;
 		data[1] = (value & 0xF00) >> 8;
 
 		SPDR = DAC_CONF | data[1];
-
-		current_state = FIRST_BYTE;
 	} else {
 		buffer_flag = 1;
 
@@ -76,6 +75,8 @@ ISR(SPI_STC_vect) {
 		PORTB |= (1 << DAC_LDAC); //LDAC high
 
 		if(buffer_flag) {
+			current_state = FIRST_BYTE;
+		
 			buffer_flag = 0;
 
 			PORTB &= ~(1 << DAC_CS); //CS low
@@ -84,8 +85,6 @@ ISR(SPI_STC_vect) {
 			data[1] = buffer[1];
 
 			SPDR = DAC_CONF | data[1];
-
-			current_state = FIRST_BYTE;
 		} else {
 			current_state = IDLE;
 		}

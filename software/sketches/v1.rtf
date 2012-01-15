@@ -1,0 +1,257 @@
+{\rtf1\ansi\ansicpg1252\cocoartf1138\cocoasubrtf230
+{\fonttbl\f0\fnil\fcharset0 Monaco;}
+{\colortbl;\red255\green255\blue255;\red0\green0\blue191;\red0\green0\blue0;\red96\green96\blue96;
+\red191\green0\blue0;}
+\deftab560
+\pard\pardeftab560
+
+\f0\fs18 \cf2 Help\cf3 .gui;\
+\
+(\
+	s.reboot;\
+	\
+	\cf2 SinOsc\cf3 \
+	\cf2 LFTri\cf3 \
+	\cf2 Pulse\cf3 \
+	\cf2 SawOsc\cf3 \
+	\cf2 GrayNoise\
+	\
+	\cf3 \
+	\
+	\cf2 SynthDef\cf3 .new(\cf4 "TriOsc"\cf3 , \{ \cf2 arg\cf3  out = 0, freq = 440, gain = 0.5;\
+		\cf2 Out\cf3 .ar(\
+			out,\
+			\cf2 LFTri\cf3 .ar(\
+				freq,\
+				0,\
+				gain,\
+				0\
+			)\
+		)\
+	\}).send(s);\
+	\
+	\cf2 SynthDef\cf3 .new(\cf4 "SawOsc"\cf3 , \{ \cf2 arg\cf3  out = 0, freq = 440, gain = 0.5;\
+		\cf2 Out\cf3 .ar(\
+			out,\
+			\cf2 Saw\cf3 .ar(\
+				freq,\
+				gain,\
+				0\
+			)\
+		)\
+	\}).send(s);\
+\
+	\cf2 SynthDef\cf3 .new(\cf4 "PulseOsc"\cf3 , \{ \cf2 arg\cf3  out = 0, freq = 440, gain = 0.5, width = 0.5;\
+		\cf2 Out\cf3 .ar(\
+			out,\
+			\cf2 Pulse\cf3 .ar(\
+				freq,\
+				width,\
+				gain,\
+				0\
+			)\
+		)\
+	\}).send(s);\
+	\
+	\cf2 SynthDef\cf3 .new(\cf4 "SinOsc"\cf3 , \{ \cf2 arg\cf3  out = 0, freq = 440, gain = 0.5;\
+		\cf2 Out\cf3 .ar(\
+			out,\
+			\cf2 SinOsc\cf3 .ar(\
+				freq,\
+				0,\
+				gain,\
+				0\
+			)\
+		)\
+	\}).send(s);\
+	\
+	\cf2 SynthDef\cf3 .new(\cf4 "PrimaryMixer"\cf3 , \{ \cf2 arg\cf3  out = 0, c1, c2 ;\
+		\cf2 Out\cf3 .ar(\
+			out,\
+			\cf2 Mix\cf3 .new([c1, c2])\
+		)\
+	\}).send(s);\
+	\
+	\cf2 SynthDef\cf3 .new(\cf4 "Test"\cf3 , \{\cf2 arg\cf3  out = 0, freq = 440, lfo = 0, gain = 0.5;\
+		\cf2 Out\cf3 .ar(\
+			out,\
+			\cf2 SinOsc\cf3 .ar(\
+				freq+lfo,\
+				0,\
+				gain,\
+				0\
+			)\
+		)\
+	\}).send(s);\
+					\
+	~synth = \cf2 Synth\cf3 (\cf4 "Test"\cf3 , [\cf4 "freq"\cf3 , 900]);\
+	\
+	~lfo = \cf2 Synth\cf3 (\cf4 "lfo"\cf3 , [\cf4 "out"\cf3 , 2]);\
+	\
+	~bus = \cf2 Bus\cf3 .control(s, 1).set(600);\
+	~lfo.set(\cf4 "out"\cf3 , ~bus.index);\
+	~lfo.set(\cf4 "gain"\cf3 , 10);\
+	~synth.set(\cf4 "lfo"\cf3 , ~bus.asMap);\
+	\
+	\cf2 SynthDef\cf3 .new(\cf4 "lfo"\cf3 , \{ \cf2 arg\cf3  out = 0, freq = 10, gain = 0.1;\
+		\cf2 Out\cf3 .kr(\
+			out,\
+			\cf2 SinOsc\cf3 .kr(\
+				freq,\
+				0,\
+				gain\
+			)\
+		)\
+	\}).send(s);\
+	\
+	\cf2 SynthDef\cf3 .new(\cf4 "mm-pulse"\cf3 , \{\
+		\cf2 arg\cf3  freq = 300, width = 0.5, mult = 0.2, center = 450, gain = 1, \
+		freq_gate1 = 0, width_gate1 = 0, mult_gate1 = 0, center_gate1 = 0, gain_gate1 = 0, \
+		freq_gate2 = 0, width_gate2 = 0, mult_gate2 = 0, center_gate2 = 0, gain_gate2 = 0, \
+		freq_gate3 = 0, width_gate3 = 0, mult_gate3 = 0, center_gate3 = 0, gain_gate3 = 0, \
+		lfo1 = 0, lfo2 = 0, lfo3 = 0;\
+		\cf2 Out\cf3 .ar(\
+			0, \
+			\cf2 MoogFF\cf3 .ar(\
+				\cf2 Pulse\cf3 .ar(\
+					freq+\cf2 Gate\cf3 .kr(\cf2 In\cf3 .kr(lfo1, 1)*freq, freq_gate1)+\cf2 Gate\cf3 .kr(\cf2 In\cf3 .kr(lfo2, 1)*freq, freq_gate2)+\cf2 Gate\cf3 .kr(\cf2 In\cf3 .kr(lfo3, 1)*freq, freq_gate3),\
+					width+\cf2 Gate\cf3 .kr(\cf2 In\cf3 .kr(lfo1, 1)*width, width_gate1)+\cf2 Gate\cf3 .kr(\cf2 In\cf3 .kr(lfo2, 1)*width, width_gate2)+\cf2 Gate\cf3 .kr(\cf2 In\cf3 .kr(lfo3, 1)*width, width_gate3),\
+					mult+\cf2 Gate\cf3 .kr(\cf2 In\cf3 .kr(lfo1, 1)*mult, mult_gate1)+\cf2 Gate\cf3 .kr(\cf2 In\cf3 .kr(lfo2, 1)*mult, mult_gate2)+\cf2 Gate\cf3 .kr(\cf2 In\cf3 .kr(lfo3, 1)*mult, mult_gate3)\
+				),\
+				center+\cf2 Gate\cf3 .kr(\cf2 In\cf3 .kr(lfo1, 1)*center, center_gate1)+\cf2 Gate\cf3 .kr(\cf2 In\cf3 .kr(lfo2, 1)*center, center_gate2)+\cf2 Gate\cf3 .kr(\cf2 In\cf3 .kr(lfo3, 1)*center, center_gate3),\
+				gain+\cf2 Gate\cf3 .kr(\cf2 In\cf3 .kr(lfo1, 1)*gain, gain_gate1)+\cf2 Gate\cf3 .kr(\cf2 In\cf3 .kr(lfo2, 1)*gain, gain_gate2)+\cf2 Gate\cf3 .kr(\cf2 In\cf3 .kr(lfo3, 1)*gain, gain_gate3)\
+			)!2\
+		) \
+	\}).send(s);\
+	\
+		\
+	~emptybus = \cf2 Bus\cf3 .control(s, 1);\
+	~bus1 = \cf2 Bus\cf3 .control(s, 1);\
+	~bus2 = \cf2 Bus\cf3 .control(s, 1);\
+	~bus3 = \cf2 Bus\cf3 .control(s, 1);\
+\
+	~lfo1 = \cf2 Synth\cf3 (\cf4 "lfo"\cf3 , [\cf4 "out"\cf3 , ~bus1.index]);\
+	~lfo2 = \cf2 Synth\cf3 (\cf4 "lfo"\cf3 , [\cf4 "out"\cf3 , ~bus2.index]);\
+	~lfo3 = \cf2 Synth\cf3 (\cf4 "lfo"\cf3 , [\cf4 "out"\cf3 , ~bus3.index]);\
+\
+	~synth = \cf2 Synth\cf3 (\cf4 "mm-pulse"\cf3 , [\cf4 "lfo1"\cf3 , ~bus1.index, \cf4 "lfo2"\cf3 , ~bus2.index, \cf4 "lfo3"\cf3 , ~bus3.index]);	\
+	\
+	~synth.free;\
+)\
+\
+(\
+	currentEnvironment.clear;\
+	\
+	~win = \cf2 Window\cf3 (\cf4 ""\cf3 , \cf2 Rect\cf3 (1500, 0, 800, 350)); \cf5 // Window is a subclass of ViewRedirect\cf3 \
+	\
+	~sli = \cf2 List\cf3 [];\
+	\
+	~kno = \cf2 List\cf3 [];\
+	\
+	~solo = \cf2 List\cf3 [];\
+	~mute = \cf2 List\cf3 [];\
+	~rec = \cf2 List\cf3 [];\
+	\
+	8.do\{ \cf2 arg\cf3  i;\
+		~sli.add(\cf2 Slider\cf3 (~win, \cf2 Rect\cf3 (45+(i*97.5), 75, 25, 250)));\
+	\};\
+	\
+	8.do\{ \cf2 arg\cf3  i;\
+		~kno.add(\cf2 Knob\cf3 .new(~win, \cf2 Rect\cf3 (34.75+(i*97.5), 10, 48, 48)));\
+	\};\
+	\
+	8.do\{ \cf2 arg\cf3  i;\
+		~solo.add(\cf2 Button\cf3 (~win, \cf2 Rect\cf3 (10+(i*97.5), 85, 20, 20)));\
+		~solo[i].states = [[\cf4 "S"\cf3 , \cf2 Color\cf3 .red, \cf2 Color\cf3 .black], [\cf4 "S"\cf3 , \cf2 Color\cf3 .black, \cf2 Color\cf3 .red]];\
+		\
+		~mute.add(\cf2 Button\cf3 (~win, \cf2 Rect\cf3 (10+(i*97.5), 115, 20, 20)));\
+		~mute[i].states = [[\cf4 "M"\cf3 , \cf2 Color\cf3 .red, \cf2 Color\cf3 .black], [\cf4 "M"\cf3 , \cf2 Color\cf3 .black, \cf2 Color\cf3 .red]];\
+		\
+		~rec.add(\cf2 Button\cf3 (~win, \cf2 Rect\cf3 (10+(i*97.5), 145, 20, 20)));\
+		~rec[i].states = [[\cf4 "R"\cf3 , \cf2 Color\cf3 .red, \cf2 Color\cf3 .black], [\cf4 "R"\cf3 , \cf2 Color\cf3 .black, \cf2 Color\cf3 .red]];\
+	\};\
+	\
+	~sli[0].action = \{\cf2 arg\cf3  slider; ~synth.set(\cf4 "freq"\cf3 , slider.value*800+20);\};\
+	~sli[1].action = \{\cf2 arg\cf3  slider; ~synth.set(\cf4 "width"\cf3 , slider.value);\};\
+	~sli[2].action = \{\cf2 arg\cf3  slider; ~synth.set(\cf4 "mult"\cf3 , slider.value);\};\
+	~sli[3].action = \{\cf2 arg\cf3  slider; ~synth.set(\cf4 "center"\cf3 , slider.value*1600+20);\};\
+	~sli[4].action = \{\cf2 arg\cf3  slider; ~synth.set(\cf4 "gain"\cf3 , slider.value*4);\};\
+	\
+	~kno[0].action = \{\cf2 arg\cf3  knob; ~lfo1.set(\cf4 "freq"\cf3 , knob.value*50);\};\
+	~kno[1].action = \{\cf2 arg\cf3  knob; ~lfo1.set(\cf4 "gain"\cf3 , knob.value);\};\
+	~kno[2].action = \{\cf2 arg\cf3  knob; ~lfo2.set(\cf4 "freq"\cf3 , knob.value*50);\};\
+	~kno[3].action = \{\cf2 arg\cf3  knob; ~lfo2.set(\cf4 "gain"\cf3 , knob.value);\};\
+	~kno[4].action = \{\cf2 arg\cf3  knob; ~lfo3.set(\cf4 "freq"\cf3 , knob.value*50);\};\
+	~kno[5].action = \{\cf2 arg\cf3  knob; ~lfo3.set(\cf4 "gain"\cf3 , knob.value);\};\
+	\
+	~solo[0].action = \{\cf2 arg\cf3  b; ~synth.set(\cf4 "freq_gate1"\cf3 , b.value);\};\
+	~solo[1].action = \{\cf2 arg\cf3  b; ~synth.set(\cf4 "width_gate1"\cf3 , b.value);\};\
+	~solo[2].action = \{\cf2 arg\cf3  b; ~synth.set(\cf4 "mult_gate1"\cf3 , b.value);\};\
+	~solo[3].action = \{\cf2 arg\cf3  b; ~synth.set(\cf4 "center_gate1"\cf3 , b.value);\};\
+	~solo[4].action = \{\cf2 arg\cf3  b; ~synth.set(\cf4 "gain_gate1"\cf3 , b.value);\};\
+	\
+	~mute[0].action = \{\cf2 arg\cf3  b; ~synth.set(\cf4 "freq_gate2"\cf3 , b.value);\};\
+	~mute[1].action = \{\cf2 arg\cf3  b; ~synth.set(\cf4 "width_gate2"\cf3 , b.value);\};\
+	~mute[2].action = \{\cf2 arg\cf3  b; ~synth.set(\cf4 "mult_gate2"\cf3 , b.value);\};\
+	~mute[3].action = \{\cf2 arg\cf3  b; ~synth.set(\cf4 "center_gate2"\cf3 , b.value);\};\
+	~mute[4].action = \{\cf2 arg\cf3  b; ~synth.set(\cf4 "gain_gate2"\cf3 , b.value);\};\
+	\
+	~rec[0].action = \{\cf2 arg\cf3  b; ~synth.set(\cf4 "freq_gate3"\cf3 , b.value);\};\
+	~rec[1].action = \{\cf2 arg\cf3  b; ~synth.set(\cf4 "width_gate3"\cf3 , b.value);\};\
+	~rec[2].action = \{\cf2 arg\cf3  b; ~synth.set(\cf4 "mult_gate3"\cf3 , b.value);\};\
+	~rec[3].action = \{\cf2 arg\cf3  b; ~synth.set(\cf4 "center_gate3"\cf3 , b.value);\};\
+	~rec[4].action = \{\cf2 arg\cf3  b; ~synth.set(\cf4 "gain_gate3"\cf3 , b.value);\};\
+	\
+	\cf2 MIDIClient\cf3 .init;\
+	\
+	\cf2 MIDIIn\cf3 .findPort(\cf4 "nanoKONTROL2"\cf3 , \cf4 "SLIDER/KNOB"\cf3 );\
+	\cf2 MIDIIn\cf3 .findPort(\cf4 "Keystation Mini 32"\cf3 , \cf4 "Keystation Mini 32"\cf3 );\
+	\
+	\cf2 MIDIIn\cf3 .connect(0, \cf2 MIDIIn\cf3 .findPort(\cf4 "nanoKONTROL2"\cf3 , \cf4 "SLIDER/KNOB"\cf3 ).uid);\
+	\
+	\cf2 MIDIIn\cf3 .control = \{ \cf2 arg\cf3  src, chan, num, val;\
+		~kno.do(\{ \cf2 arg\cf3  k, i;\
+			if((chan == 0) && (num == (i+16))) \{\
+				\{k.valueAction = val/127\}.defer;\
+			\};\
+		\});\
+		~sli.do(\{ \cf2 arg\cf3  k, i;\
+			if((chan == 0) && (num == (i))) \{\
+				\{k.valueAction = val/127\}.defer;\
+			\};\
+		\});\
+		~solo.do(\{ \cf2 arg\cf3  k, i;\
+			if((chan == 0) && (num == (i+32))) \{\
+				if(val == 0) \
+					\{\{k.valueAction = 0\}.defer\}\
+					\{\{k.valueAction = 1\}.defer\};\
+			\};\
+		\});\
+		~mute.do(\{ \cf2 arg\cf3  k, i;\
+			if((chan == 0) && (num == (i+48))) \{\
+				if(val == 0) \
+					\{\{k.valueAction = 0\}.defer\}\
+					\{\{k.valueAction = 1\}.defer\};\
+			\};\
+		\});\
+		~rec.do(\{ \cf2 arg\cf3  k, i;\
+			if((chan == 0) && (num == (i+64))) \{\
+				if(val == 0) \
+					\{\{k.valueAction = 0\}.defer\}\
+					\{\{k.valueAction = 1\}.defer\};\
+			\};\
+		\});\
+	\};\
+	\
+	~win.front();\
+)\
+\
+\cf5 //MIDIIn.noteOff = \{ arg src, chan, num, vel; 	[chan,num,vel / 127].postln; \};\cf3 \
+\cf5 //MIDIIn.noteOn = \{ arg src, chan, num, vel; 	[chan,num,vel / 127].postln; \};\cf3 \
+\cf5 //MIDIIn.polytouch = \{ arg src, chan, num, vel; 	[chan,num,vel / 127].postln; \};\cf3 \
+\cf5 //MIDIIn.program = \{ arg src, chan, prog; 		[chan,prog].postln; \};\cf3 \
+\cf5 //MIDIIn.touch = \{ arg src, chan, pressure; 	[chan,pressure].postln; \};\cf3 \
+\cf5 //MIDIIn.bend = \{ arg src, chan, bend; 			[chan,bend - 8192].postln; \};\cf3 \
+\cf5 //MIDIIn.sysex = \{ arg src, sysex; 			sysex.postln; \};\cf3 \
+\cf5 //MIDIIn.sysrt = \{ arg src, chan, val; 			[chan,val].postln; \};\cf3 \
+\cf5 //MIDIIn.smpte = \{ arg src, chan, val; 			[chan,val].postln; \};}

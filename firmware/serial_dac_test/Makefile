@@ -16,7 +16,7 @@
 
 DEVICE     = atmega328
 CLOCK      = 20000000
-PROGRAMMER = -c usbasp -P usb
+PROGRAMMER = -c usbtiny -P usb
 FUSES      = -U efuse:w:0x07:m -U hfuse:w:0xD9:m -U lfuse:w:0xDF:m
 
 NAME       = main
