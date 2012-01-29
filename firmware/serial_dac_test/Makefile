@@ -1,70 +1,76 @@
-# Name: Makefile
-# Author: <insert your name here>
-# Copyright: <insert your copyright message here>
-# License: <insert your license reference here>
+# Author: Severin Smith
 
-# This is a prototype Makefile. Modify it according to your needs.
-# You should at least check the settings for
-# DEVICE ....... The AVR device you compile for
-# CLOCK ........ Target AVR clock rate in Hertz
-# OBJECTS ...... The object files created from your source files. This list is
-#                usually the same as the list of source files with suffix ".o".
-# PROGRAMMER ... Options to avrdude which define the hardware you use for
-#                uploading to the AVR and the interface where this hardware
-#                is connected.
-# FUSES ........ Parameters for avrdude to flash the fuses appropriately.
+##Hardware##
 
 DEVICE     = atmega328
 CLOCK      = 20000000
-PROGRAMMER = -c usbtiny -P usb
+
 FUSES      = -U efuse:w:0x07:m -U hfuse:w:0xD9:m -U lfuse:w:0xDF:m
+PROGRAMMER = -c usbtiny -P usb
+
+##Files/Directories##
 
 NAME       = main
-OBJECTS    = $(NAME).o dac.o adc.o
+SRC_DIR    = src
+BIN_DIR    = bin
+SOURCES    = $(wildcard $(SRC_DIR)/*.c)
+OBJECTS    = $(patsubst $(SRC_DIR)/%.c, $(BIN_DIR)/%.o, $(SOURCES))
+DOXY_CONF  = doxygen.conf
 
-# Tune the lines below only if you know what you are doing:
+##Tools##
 
-AVRDUDE = avrdude $(PROGRAMMER) -p $(DEVICE)
+AVRDUDE = avrdude -v $(PROGRAMMER) -p $(DEVICE)
 COMPILE = avr-gcc -Wall -Os -DF_CPU=$(CLOCK) -mmcu=$(DEVICE)
 
-# symbolic targets:
-all:	$(NAME).hex
+##Main Targets##
 
-.c.o:
-	$(COMPILE) -c $< -o $@
+all: $(BIN_DIR)/$(NAME).hex
 
-.S.o:
-	$(COMPILE) -x assembler-with-cpp -c $< -o $@
-# "-x assembler-with-cpp" should not be necessary since this is the default
-# file type for the .S (with capital S) extension. However, upper case
-# characters are not always preserved on Windows. To ensure WinAVR
-# compatibility define the file type manually.
+#For XCode
+install: flash
 
-.c.s:
-	$(COMPILE) -S $< -o $@
-
-flash:	all
+flash: all
 	$(AVRDUDE) -U flash:w:$(NAME).hex:i
 
 fuse:
 	$(AVRDUDE) $(FUSES)
 
-# Xcode uses the Makefile targets "", "clean" and "install"
-install: flash
+docs:
+	doxygen $(DOXY_CONF)
 
-clean:
-	rm -f $(NAME).hex $(NAME).elf $(OBJECTS)
+clean_doc:
+	rm -rf doc/*
 
-# file targets:
-$(NAME).elf: $(OBJECTS)
-	$(COMPILE) -o $(NAME).elf $(OBJECTS)
+clean_bin:
+	rm -f $(BIN_DIR)/*.hex $(BIN_DIR)/*.elf $(BIN_DIR)/*.o
 
-$(NAME).hex: $(NAME).elf
-	rm -f $(NAME).hex
-	avr-objcopy -j .text -j .data -O ihex $(NAME).elf $(NAME).hex
-# If you have an EEPROM section, you must also create a hex file for the
-# EEPROM and add it to the "flash" target.
+clean: clean_bin
 
-# Targets for code debugging and analysis:
-disasm:	$(NAME).elf
-	avr-objdump -d $(NAME).elf
+##Specific Targets##
+
+#Make elf file
+$(BIN_DIR)/%.elf: $(OBJECTS)
+	$(COMPILE) -o $@ $(OBJECTS)
+
+#Make hex file
+$(BIN_DIR)/%.hex: $(BIN_DIR)/%.elf
+	avr-objcopy -j .text -j .data -O ihex $< $@
+
+##Generic Targets##
+
+#Compile object files from c
+$(BIN_DIR)/%.o: $(SRC_DIR)/%.c
+	$(COMPILE) -c $< -o $@
+
+#Compile object files from assembler
+$(BIN_DIR)/%.o: $(SRC_DIR)/%.S
+	$(COMPILE) -x assembler-with-cpp -c $< -o $@
+
+#Compile assembler only
+$(SRC_DIR)/%.S: $(SRC_DIR)/%.c
+	$(COMPILE) -S $< -o $@
+
+##Other##
+
+#Save intermediate files
+.SECONDARY:
