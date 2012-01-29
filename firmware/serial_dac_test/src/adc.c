@@ -1,6 +1,6 @@
 /**
 @file adc.c
-@brief This file
+@brief
 */
 
 #include "adc.h"
@@ -27,11 +27,6 @@ void adc_init(void) {
 	ADCSRA |= (1 << ADSC); //Trigger first sequence
 }
 
-/**
-@brief function to set some value
-@param mux this is the mux input.
-@return the stuff you get out
-*/
 uint16_t adc_val(uint8_t mux) {
 	if(mux < ADC_MUX_LEN) return latest_values[mux];
 	else return ADC_ERROR_CODE;
@@ -46,7 +41,6 @@ ISR(ADC_vect) {
 
 	ADMUX &= ~(0x0F);
 	ADMUX |= mux_pointer;
-
 
 	ADCSRA |= (1 << ADSC); //Trigger sequence
 }

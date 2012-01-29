@@ -1,3 +1,8 @@
+/**
+@file dac.c
+@brief
+*/
+
 #include "dac.h"
 
 #include "main.h"
@@ -30,7 +35,7 @@ void dac_init(void) {
 	SPSR = (1 << SPI2X);
 }
 
-void serial_dac_blocking(uint16_t value) {
+/*void serial_dac_blocking(uint16_t value) {
 	PORTB &= ~(1 << SERIAL_DAC_CS); //CS low
 
 	data[0] = SERIAL_DAC_CONF | (value & 0xF00) >> 8; //Top 4 bits
@@ -48,7 +53,7 @@ void serial_dac_blocking(uint16_t value) {
 	PORTB &= ~(1 << SERIAL_DAC_LDAC); //LDAC low
 	_delay_us(1); //min LDAC pulse width
 	PORTB |= (1 << SERIAL_DAC_LDAC); //LDAC high
-}
+}*/
 
 void serial_dac(uint16_t value) {
 	if(state == IDLE) {

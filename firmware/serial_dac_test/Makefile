@@ -30,7 +30,7 @@ all: $(BIN_DIR)/$(NAME).hex
 install: flash
 
 flash: all
-	$(AVRDUDE) -U flash:w:$(NAME).hex:i
+	$(AVRDUDE) -U flash:w:$(BIN_DIR)/$(NAME).hex:i
 
 fuse:
 	$(AVRDUDE) $(FUSES)
