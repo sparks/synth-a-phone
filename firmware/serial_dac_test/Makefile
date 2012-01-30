@@ -44,7 +44,7 @@ clean_doc:
 clean_bin:
 	rm -f $(BIN_DIR)/*.hex $(BIN_DIR)/*.elf $(BIN_DIR)/*.o
 
-clean: clean_bin
+clean: clean_bin clean_doc
 
 ##Specific Targets##
 
