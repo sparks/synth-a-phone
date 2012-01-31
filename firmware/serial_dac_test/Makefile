@@ -42,7 +42,7 @@ clean_doc:
 	rm -rf doc/*
 
 clean_bin:
-	rm -f $(BIN_DIR)/*.hex $(BIN_DIR)/*.elf $(BIN_DIR)/*.o
+	rm -rf bin/*
 
 clean: clean_bin clean_doc
 

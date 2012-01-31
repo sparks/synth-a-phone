@@ -10,7 +10,6 @@
 
 #include <avr/interrupt.h>
 
-uint16_t count = 0;
 timer_callback callback;
 
 void timer_init(timer_callback c, uint8_t interval) {
