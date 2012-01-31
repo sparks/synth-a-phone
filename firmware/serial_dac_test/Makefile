@@ -35,16 +35,16 @@ flash: all
 fuse:
 	$(AVRDUDE) $(FUSES)
 
-docs:
+doxygen:
 	doxygen $(DOXY_CONF)
 
-clean_doc:
+clean_doxygen:
 	rm -rf doc/*
 
 clean_bin:
 	rm -rf bin/*
 
-clean: clean_bin clean_doc
+clean: clean_bin clean_doxygen
 
 ##Specific Targets##
 
