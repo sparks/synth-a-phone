@@ -6,7 +6,7 @@ DEVICE     = atmega328
 CLOCK      = 20000000
 
 FUSES      = -U efuse:w:0x07:m -U hfuse:w:0xD9:m -U lfuse:w:0xDF:m
-PROGRAMMER = -c usbtiny -P usb
+PROGRAMMER = -c avrisp2 -P usb
 
 ##Files/Directories##
 

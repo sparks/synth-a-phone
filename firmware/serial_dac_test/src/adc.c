@@ -44,3 +44,4 @@ ISR(ADC_vect) {
 
 	ADCSRA |= (1 << ADSC); //Trigger sequence
 }
+

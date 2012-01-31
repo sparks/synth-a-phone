@@ -27,3 +27,4 @@ void timer_init(timer_callback c, uint8_t interval) {
 ISR(TIMER0_COMPA_vect) {
 	(*callback)();
 }
+

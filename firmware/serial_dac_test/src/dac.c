@@ -94,3 +94,4 @@ ISR(SPI_STC_vect) {
 		state = IDLE;
 	}
 }
+

@@ -17,3 +17,4 @@ uint8_t is_idle(void);
 uint8_t is_lossy(void);
 
 #endif
+

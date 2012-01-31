@@ -15,3 +15,4 @@ void adc_init(void);
 uint16_t adc_val(uint8_t);
 
 #endif
+
