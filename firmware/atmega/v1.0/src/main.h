@@ -8,7 +8,5 @@
 
 #include <avr/io.h>
 
-void trigger_computation(void);
-
 #endif
 

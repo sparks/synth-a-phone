@@ -17,11 +17,13 @@
 
 #define SERIAL_DAC_CONF 0x30
 
-enum state {
+typedef enum {
 	IDLE,
 	FIRST_BYTE,
 	SECOND_BYTE
-} state = IDLE;
+} dac_state_t;
+
+dac_state_t dac_state = IDLE;
 
 uint8_t data[2];
 
@@ -56,13 +58,13 @@ void dac_init(void) {
 }*/
 
 void serial_dac(uint16_t value) {
-	if(state == IDLE) {
+	if(dac_state == IDLE) {
 		data[0] = SERIAL_DAC_CONF | (value & 0xF00) >> 8;
 		data[1] = value & 0xFF;
 
 		PORTB &= ~(1 << SERIAL_DAC_CS); //CS low
 
-		state = FIRST_BYTE;
+		dac_state = FIRST_BYTE;
 
 		SPDR = data[0];
 	} else {
@@ -71,7 +73,7 @@ void serial_dac(uint16_t value) {
 }
 
 uint8_t is_idle(void) {
-	if(state == IDLE) return 1;
+	if(dac_state == IDLE) return 1;
 	else return 0;
 }
 
@@ -80,18 +82,18 @@ uint8_t is_lossy(void) {
 }
 
 ISR(SPI_STC_vect) {
-	if(state == FIRST_BYTE) {
-		state = SECOND_BYTE;
+	if(dac_state == FIRST_BYTE) {
+		dac_state = SECOND_BYTE;
 
 		SPDR = data[1];
-	} else if(state == SECOND_BYTE) {
+	} else if(dac_state == SECOND_BYTE) {
 		PORTB |= (1 << SERIAL_DAC_CS); //CS high
 
 		PORTB &= ~(1 << SERIAL_DAC_LDAC); //LDAC low
 		_delay_us(1); //min LDAC pulse width
 		PORTB |= (1 << SERIAL_DAC_LDAC); //LDAC high
 
-		state = IDLE;
+		dac_state = IDLE;
 	}
 }
 

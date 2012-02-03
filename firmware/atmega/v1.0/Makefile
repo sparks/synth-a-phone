@@ -13,7 +13,7 @@ PROGRAMMER = -c avrisp2 -P usb
 NAME       = main
 SRC_DIR    = src
 BIN_DIR    = bin
-SOURCES    = $(wildcard $(SRC_DIR)/*.c)
+SOURCES    = $(wildcard $(SRC_DIR)/*.c) $(wildcard $(SRC_DIR)/*.cpp)
 OBJECTS    = $(patsubst $(SRC_DIR)/%.c, $(BIN_DIR)/%.o, $(SOURCES))
 DOXY_CONF  = doxygen.conf
 
@@ -24,7 +24,7 @@ COMPILE = avr-gcc -Wall -Os -DF_CPU=$(CLOCK) -mmcu=$(DEVICE)
 
 ##Main Targets##
 
-all: $(BIN_DIR)/$(NAME).hex
+all: bin_dir $(BIN_DIR)/$(NAME).hex
 
 #For XCode
 install: flash
@@ -35,14 +35,23 @@ flash: all
 fuse:
 	$(AVRDUDE) $(FUSES)
 
-doxygen:
+doxygen: doc_dir
 	doxygen $(DOXY_CONF)
 
+test:
+	echo $(SOURCES)
+
+bin_dir:
+	@mkdir -p bin
+
+doc_dir:
+	@mkdir -p doc
+
 clean_doxygen:
-	rm -rf doc/*
+	rm -rf doc
 
 clean_bin:
-	rm -rf bin/*
+	rm -rf bin
 
 clean: clean_bin clean_doxygen
 
