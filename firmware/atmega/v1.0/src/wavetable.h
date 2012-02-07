@@ -15,4 +15,3 @@ uint16_t sine_lookup[WAVETABLE_WIDTH];
 void sine_init(void);
 
 #endif
-

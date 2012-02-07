@@ -15,4 +15,3 @@ void sine_init(void) {
 		sine_lookup[i] = (uint16_t)((0xFFF >> 1) * (sin(i * 2 * PI / WAVETABLE_WIDTH) + 1));
 	}
 }
-

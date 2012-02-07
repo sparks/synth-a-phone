@@ -30,37 +30,12 @@ int main(void) {
 
 	sei();
 
-	sine_init();
-
-/*	for(;;) {
+	for(;;) {
 		if(compute_flag != 0) {
 			output = 0;
-			output += sine((adc_val(0) >> 3) + 1);
+			output += sawtooth(((adc_val(1) >> 3)+1)*triangle((adc_val(0) >> 4)));
 			compute_flag = 0;
 		}
-	}*/
-
-	for(;;) {
-		uart_tx(0x9F);
-		uart_tx(0x3C);
-		uart_tx(0x7F);
-		_delay_ms(1000);
-
-		uart_tx(0x8F);
-		uart_tx(0x3C);
-		uart_tx(0x00);
-		_delay_ms(1000);
-
-		uart_tx(0x9F);
-		uart_tx(0x3D);
-		uart_tx(0x7F);
-		_delay_ms(1000);
-
-		uart_tx(0x8F);
-		uart_tx(0x3D);
-		uart_tx(0x00);
-		_delay_ms(1000);
-
 	}
 	
 	return 0;
@@ -74,10 +49,9 @@ void trigger_computation(void) {
 	if(compute_flag != 0) {
 		too_slow_flag = 1;
 	} else {
-		//if(!is_lossy() && too_slow_flag == 0) {
+		if(!is_lossy() && too_slow_flag == 0) {
 			serial_dac(output);
 			compute_flag = 1;
-		//}
+		}
 	}
 }
-

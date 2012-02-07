@@ -10,15 +10,14 @@
 #define BAUD_RATE 31250
 #define UBRR ((F_CPU/8/BAUD_RATE)- 1)
 
-
 uart_state_t uart_state = IDLE;
 
-uart_callback callback;
+uart_callback_t uart_callback;
 
-void uart_init(uart_callback c) {
-	callback = c;
+void uart_init(uart_callback_t c) {
+	uart_callback = c;
 	UCSR0A |= (1 << U2X0);
-	UCSR0B |= (1 << RXCIE0) | (1 << TXCIE0) | (1 << RXEN0) | (1 << TXEN0);
+	UCSR0B |= (0 << RXCIE0) | (0 << TXCIE0) | (1 << RXEN0) | (1 << TXEN0);
 	UBRR0L = UBRR >> 8;
 	UBRR0L = UBRR;
 }
@@ -34,7 +33,7 @@ uart_state_t get_state(void) {
 }
 
 ISR(USART_RX_vect) {
-	(*callback)(UDR0);
+	(*uart_callback)(UDR0);
 	uart_state = IDLE;
 }
 

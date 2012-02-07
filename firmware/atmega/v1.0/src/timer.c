@@ -10,10 +10,10 @@
 
 #include <avr/interrupt.h>
 
-timer_callback callback;
+timer_callback_t timer_callback;
 
-void timer_init(timer_callback c, uint8_t interval) {
-	callback = c;
+void timer_init(timer_callback_t c, uint8_t interval) {
+	timer_callback = c;
 	
 	TCCR0A = (1 << WGM01) | (0 << WGM00); //CTC mode all outputs detached
 	TCCR0B = (0 << WGM02) | 2; //1024 prescale
@@ -25,6 +25,5 @@ void timer_init(timer_callback c, uint8_t interval) {
 }
 
 ISR(TIMER0_COMPA_vect) {
-	(*callback)();
+	(*timer_callback)();
 }
-

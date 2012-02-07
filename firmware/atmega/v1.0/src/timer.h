@@ -8,9 +8,8 @@
 
 #include <avr/io.h>
 
-typedef void (*timer_callback)(void);
+typedef void (*timer_callback_t)(void);
 
-void timer_init(timer_callback, uint8_t);
+void timer_init(timer_callback_t, uint8_t);
 
 #endif
-
