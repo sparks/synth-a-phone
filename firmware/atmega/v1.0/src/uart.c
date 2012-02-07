@@ -7,7 +7,7 @@
 
 #include <avr/interrupt.h>
 
-#define BAUD_RATE 31250
+#define BAUD_RATE 115200
 #define UBRR ((F_CPU/8/BAUD_RATE)- 1)
 
 uart_state_t uart_state = IDLE;
@@ -26,6 +26,14 @@ void uart_tx(uint8_t val) {
 	while(!(UCSR0A & (1 << UDRE0)));
 	UDR0 = val;
 	uart_state = TX;
+}
+
+void uart_string_tx(char* buf, uint8_t buf_len) {
+	uint8_t i;
+	for(i = 0;i < buf_len;i++) {
+		uart_tx(*(buf+i));
+	}
+	return;
 }
 
 uart_state_t get_state(void) {

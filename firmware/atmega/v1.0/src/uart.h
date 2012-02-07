@@ -20,6 +20,8 @@ void uart_init(uart_callback_t);
 
 void uart_tx(uint8_t);
 
+void uart_string_tx(char* buf, uint8_t buf_len);
+
 uart_state_t get_state(void);
 
 #endif

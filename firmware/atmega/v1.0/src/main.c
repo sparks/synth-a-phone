@@ -31,6 +31,11 @@ int main(void) {
 	sei();
 
 	for(;;) {
+		uart_string_tx("Hello\n", 6);
+		_delay_ms(1000);
+	}
+
+	for(;;) {
 		if(compute_flag != 0) {
 			output = 0;
 			output += sawtooth(((adc_val(1) >> 3)+1)*triangle((adc_val(0) >> 4)));
