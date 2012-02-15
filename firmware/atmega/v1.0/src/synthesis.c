@@ -61,3 +61,9 @@ uint16_t constrain(uint16_t num, uint16_t min, uint16_t max) {
 	else return num;
 }
 
+/* takes the 10 bit pot value
+ * ups it to 16 bits
+ */
+uint16_t up10to16(uint16_t int10) {
+	return int10;	
+}
