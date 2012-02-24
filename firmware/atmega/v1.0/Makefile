@@ -6,7 +6,7 @@ DEVICE     = atmega328
 CLOCK      = 20000000
 
 FUSES      = -U efuse:w:0x07:m -U hfuse:w:0xD9:m -U lfuse:w:0xDF:m
-PROGRAMMER = -c avrisp2 -P usb
+PROGRAMMER = -c dragon_isp -P usb
 
 ##Files/Directories##
 
@@ -19,7 +19,7 @@ DOXY_CONF  = doxygen.conf
 
 ##Tools##
 
-AVRDUDE = avrdude -v $(PROGRAMMER) -p $(DEVICE)
+AVRDUDE = avrdude $(PROGRAMMER) -p $(DEVICE)
 COMPILE = avr-gcc -Wall -Os -DF_CPU=$(CLOCK) -mmcu=$(DEVICE)
 
 ##Main Targets##

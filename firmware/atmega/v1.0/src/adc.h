@@ -11,7 +11,7 @@
 #define ADC_ERROR_CODE 0xFFFF
 
 void adc_init(void);
-
+void adc_trigger(void);
 uint16_t adc_val(uint8_t);
 
 #endif
