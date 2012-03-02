@@ -17,13 +17,19 @@
 
 #define SERIAL_DAC_CONF 0x30
 
+#define PAR_DAC_WR PD2
+#define PAR_DAC_AB PD3
+#define PAR_DAC_NIBBLE_LOW PC0
+#define PAR_DAC_NIBBLE_HIGH PD4
+
 typedef enum {
 	IDLE,
 	FIRST_BYTE,
 	SECOND_BYTE
 } dac_state_t;
 
-dac_state_t dac_state = IDLE;
+dac_state_t ser_dac_state = IDLE;
+dac_state_t par_dac_state = IDLE;
 
 uint8_t data[2];
 
@@ -33,38 +39,58 @@ void dac_init(void) {
 	DDRB |= (1 << SERIAL_DAC_LDAC) | (1 << SERIAL_DAC_DIN) | (1 << SERIAL_DAC_CS) | (1 << SERIAL_DAC_SCK);
 	PORTB |= (1 << SERIAL_DAC_LDAC) | (0 << SERIAL_DAC_DIN) | (1 << SERIAL_DAC_CS) | (0 << SERIAL_DAC_SCK);
 
+	DDRC |= (0x0F << PAR_DAC_NIBBLE_LOW);
+	PORTC &= ~(0x0F << PAR_DAC_NIBBLE_LOW);
+
+	DDRD |= (1 << PAR_DAC_WR) | (1 << PAR_DAC_AB) | (0x0F << PAR_DAC_NIBBLE_HIGH);
+	PORTD &= ~((1 << PAR_DAC_WR) | (1 << PAR_DAC_AB) | (0x0F << PAR_DAC_NIBBLE_HIGH));
+
 	SPCR = (1 << SPIE) | (1 << SPE) | (0 << DORD) | (1 << MSTR) | (0 << CPOL) | (0 << CPHA) | (0 << SPR1) | (0 << SPR0);
 	SPSR = (1 << SPI2X);
 }
 
-/*void serial_dac_blocking(uint16_t value) {
-	PORTB &= ~(1 << SERIAL_DAC_CS); //CS low
+void par_dac(uint16_t value) {
+	if(par_dac_state == IDLE) {
+		par_dac_state = FIRST_BYTE;
 
-	data[0] = SERIAL_DAC_CONF | (value & 0xF00) >> 8; //Top 4 bits
-	data[1] = value & 0xFF; //Bottom 8 bits
+		PORTD &= ~(1 << PAR_DAC_WR); //Low write
+		PORTD &= ~(1 << PAR_DAC_AB); //low ab
 
-	SPDR = data[0]; //First send conf+top 4bits
-	while((SPSR & (1 << SPIF)) == 0); //Wait for send
+		PORTC &= ~(0x0F << PAR_DAC_NIBBLE_LOW);
+		PORTD &= ~(0x0F << PAR_DAC_NIBBLE_HIGH);
 
-	SPDR = data[1]; //Next send bottom 8 bits
-	while((SPSR & (1 << SPIF)) == 0); //Wait for send
+		PORTC |= ((value & 0x0F) << PAR_DAC_NIBBLE_LOW);
+		PORTD |= (((value >> 4) & 0x0F) << PAR_DAC_NIBBLE_HIGH);
 
-	PORTB |= (1 << SERIAL_DAC_CS); //CS high
+		PORTD |= (1 << PAR_DAC_WR); //high write
 
-	//Latch
-	PORTB &= ~(1 << SERIAL_DAC_LDAC); //LDAC low
-	_delay_us(1); //min LDAC pulse width
-	PORTB |= (1 << SERIAL_DAC_LDAC); //LDAC high
-}*/
+		par_dac_state = SECOND_BYTE;
+
+		PORTD &= ~(1 << PAR_DAC_WR); //Low write
+		PORTD |= (1 << PAR_DAC_AB); //high ab
+
+		PORTC &= ~(0x0F << PAR_DAC_NIBBLE_LOW);
+		PORTD &= ~(0x0F << PAR_DAC_NIBBLE_HIGH);
+
+		PORTC |= (((value >> 8) & 0x0F) << PAR_DAC_NIBBLE_LOW);
+		PORTD |= (((value >> 12) & 0x0F) << PAR_DAC_NIBBLE_HIGH);
+
+		PORTD |= (1 << PAR_DAC_WR); //high write
+
+		par_dac_state = IDLE;
+	} else {
+		lossy_flag = 1;
+	}
+}
 
 void serial_dac(uint16_t value) {
-	if(dac_state == IDLE) {
+	if(ser_dac_state == IDLE) {
 		data[0] = SERIAL_DAC_CONF | (value & 0xF00) >> 8;
 		data[1] = value & 0xFF;
 
 		PORTB &= ~(1 << SERIAL_DAC_CS); //CS low
 
-		dac_state = FIRST_BYTE;
+		ser_dac_state = FIRST_BYTE;
 
 		SPDR = data[0];
 	} else {
@@ -73,7 +99,7 @@ void serial_dac(uint16_t value) {
 }
 
 uint8_t is_idle(void) {
-	if(dac_state == IDLE) return 1;
+	if(ser_dac_state == IDLE && par_dac_state == IDLE) return 1;
 	else return 0;
 }
 
@@ -82,18 +108,18 @@ uint8_t is_lossy(void) {
 }
 
 ISR(SPI_STC_vect) {
-	if(dac_state == FIRST_BYTE) {
-		dac_state = SECOND_BYTE;
+	if(ser_dac_state == FIRST_BYTE) {
+		ser_dac_state = SECOND_BYTE;
 
 		SPDR = data[1];
-	} else if(dac_state == SECOND_BYTE) {
+	} else if(ser_dac_state == SECOND_BYTE) {
 		PORTB |= (1 << SERIAL_DAC_CS); //CS high
 
 		PORTB &= ~(1 << SERIAL_DAC_LDAC); //LDAC low
 		_delay_us(1); //min LDAC pulse width
 		PORTB |= (1 << SERIAL_DAC_LDAC); //LDAC high
 
-		dac_state = IDLE;
+		ser_dac_state = IDLE;
 	}
 }
 

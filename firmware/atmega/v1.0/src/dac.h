@@ -12,6 +12,7 @@ void dac_init(void);
 
 // void serial_dac_blocking(uint16_t);
 void serial_dac(uint16_t);
+void par_dac(uint16_t);
 
 uint8_t is_idle(void);
 uint8_t is_lossy(void);
