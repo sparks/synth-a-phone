@@ -50,7 +50,7 @@ void uart_string_tx(char* buf, uint8_t buf_len) {
 
 	for(i = 0;i < buf_len;i++) { //Foreach
 		uint8_t next_tail = (out_tail+1)%BUF_LEN; //Precompute nextail
-		if(next_tail != out_head) break; //Leave if the buffer is full
+		if(next_tail == out_head) break; //Leave if the buffer is full
 
 		out_buf[out_tail] = *(buf+i); //Add to the buffer
 		out_tail = next_tail; //Increment tail		
@@ -81,7 +81,7 @@ void uart_string_rx(char* buf, uint8_t buf_len) {
 	uint8_t i; //Precompute next tail
 
 	for(i = 0;i < buf_len;i++) { //Foreach
-		if(in_head != in_tail) break; //Leave if the buffer is empty
+		if(in_head == in_tail) break; //Leave if the buffer is empty
 
 		*(buf+i) = in_buf[in_head]; //Copy value into the buffer
 		in_head = (in_head+1)%BUF_LEN; //Increment head 

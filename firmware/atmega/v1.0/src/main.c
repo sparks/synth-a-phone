@@ -37,8 +37,8 @@ int main(void) {
 	sei();
 
 	for(;;) {
-		uart_string_tx("Hello\n", 6);
-		_delay_ms(1000);
+		// uart_string_tx("Hello\n", 6);
+		// _delay_ms(1000);
 	}
 
 	for(;;) {
@@ -60,11 +60,11 @@ int main(void) {
 }
 
 void uart_callback(void) {
-	// if(uart_available() > 3) {
-	// 	uint8_t str[3];
-	// 	uart_string_rx(&str, 3);
-	// 	uart_string_tx(&str, 3);
-	// }
+	if(uart_available() >= 3) {
+		uint8_t str[3];
+		uart_string_rx(&str, 3);
+		uart_string_tx(&str, 3);
+	}
 
 	return;
 }
