@@ -2,7 +2,7 @@
 
 #Make sure you set your programmer name and port correctly
 
-PROGRAMMER = -c dragon_isp -P usb
+PROGRAMMER = -c $(AVR_ISP) -P usb
 AVRDUDE = avrdude $(PROGRAMMER) -p $(DEVICE)
 
 ##Targets##

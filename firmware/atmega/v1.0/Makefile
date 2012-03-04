@@ -6,7 +6,7 @@ DEVICE     = atmega328
 CLOCK      = 20000000
 
 FUSES      = -U efuse:w:0x07:m -U hfuse:w:0xD9:m -U lfuse:w:0xDF:m
-PROGRAMMER = -c dragon_isp -P usb
+PROGRAMMER = -c $(AVR_ISP) -P usb
 
 ##Files/Directories##
 
