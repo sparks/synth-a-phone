@@ -10,6 +10,7 @@
 #include "timer.h"
 #include "uart.h"
 
+#include "distortion.h"
 #include "wavetable.h"
 #include "synthesis.h"
 #include "filters.h"
@@ -44,13 +45,22 @@ int main(void) {
 	for(;;) {
 		if(compute_flag != 0) {
 			hif_output = 0;
-			hif_output += sawtooth(((adc_val(0) >> 3)+1));
 			
+			if (adc_val(2) > 511)
+				hif_output += sawtooth(((adc_val(0) >> 3) + 1));
+			else
+				hif_output += triangle(((adc_val(0) >> 2) + 1));
+			
+			/*
 			x_n[filter_idx] = hif_output;
 			filter_idx++;
 			if(filter_idx >= FILTER_1_ORDER) filter_idx = filter_idx%FILTER_1_ORDER;
 			
 			low_pass(&y_n[filter_idx]);
+			*/
+			
+			if (adc_val(1) > 511)
+				clip(&hif_output);
 				
 			compute_flag = 0;
 		}
