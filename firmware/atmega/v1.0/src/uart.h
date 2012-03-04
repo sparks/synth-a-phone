@@ -8,19 +8,15 @@
 
 #include <avr/io.h>
 
-typedef void (*uart_callback_t)(uint8_t);
-
-typedef enum {
-	IDLE,
-	TX,
-	RX
-} uart_state_t;
+typedef void (*uart_callback_t)(void);
 
 void uart_init(uart_callback_t);
 
 void uart_tx(uint8_t);
 void uart_string_tx(char* buf, uint8_t buf_len);
 
-uart_state_t get_state(void);
+uint8_t uart_available(void);
+uint8_t uart_rx(void);
+void uart_string_rx(char* buf, uint8_t buf_len);
 
 #endif

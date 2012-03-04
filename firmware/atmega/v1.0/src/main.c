@@ -15,10 +15,11 @@
 #include "filters.h"
 
 #include <avr/interrupt.h>
+#include <util/delay.h>
 
 void hf_sample(void);
 void lf_sample(void);
-void uart_rx(uint8_t);
+void uart_callback(void);
 
 volatile uint8_t too_slow_flag = 0;
 volatile uint8_t compute_flag = 0;
@@ -31,9 +32,14 @@ int main(void) {
 	adc_init();
 	dac_init();
 	timer_init(&hf_sample, &lf_sample);
-	uart_init(&uart_rx);
+	uart_init(&uart_callback);
 	
 	sei();
+
+	for(;;) {
+		uart_string_tx("Hello\n", 6);
+		_delay_ms(1000);
+	}
 
 	for(;;) {
 		if(compute_flag != 0) {
@@ -53,7 +59,13 @@ int main(void) {
 	return 0;
 }
 
-void uart_rx(uint8_t val) {
+void uart_callback(void) {
+	// if(uart_available() > 3) {
+	// 	uint8_t str[3];
+	// 	uart_string_rx(&str, 3);
+	// 	uart_string_tx(&str, 3);
+	// }
+
 	return;
 }
 
