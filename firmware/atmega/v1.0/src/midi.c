@@ -3,36 +3,41 @@
 @brief
 */
 
+#include "midi.h"
 #include "uart.h"
+
+uint8_t pitch = 100;
+uint8_t velocity = 0;
+uint8_t midi_msg[3];
 
 void uart_callback(void) {
 	if(uart_available() >= 3) {
-		uint8_t str[3];
-		uart_string_rx(str, 3);
-		uart_string_tx(str, 3);
-	}
+		midi_msg[0] = uart_rx();
+		if((midi_msg[0] & 0x80) == 0) return;
+		midi_msg[1] = uart_rx();
+		midi_msg[2] = uart_rx();
 
-	return;
+		switch((midi_status_t)(midi_msg[0] & 0xF0)) {
+			case NoteOff:
+				pitch = midi_msg[1];
+				velocity = 0;
+				break;
+
+			case NoteOn:
+				pitch = midi_msg[1];
+				velocity = midi_msg[2];
+				break;
+
+			default:
+				break;
+		}
+	}
 }
 
-// for(;;) {
-// 	uart_tx(0x9F);
-// 	uart_tx(0x3C);
-// 	uart_tx(0x7F);
-// 	_delay_ms(1000);
+uint8_t get_velocity(void) {
+	return velocity;
+}
 
-// 	uart_tx(0x8F);
-// 	uart_tx(0x3C);
-// 	uart_tx(0x00);
-// 	_delay_ms(1000);
-
-// 	uart_tx(0x9F);
-// 	uart_tx(0x3D);
-// 	uart_tx(0x7F);
-// 	_delay_ms(1000);
-
-// 	uart_tx(0x8F);
-// 	uart_tx(0x3D);
-// 	uart_tx(0x00);
-// 	_delay_ms(1000);
-// }
+uint8_t get_pitch(void) {
+	return pitch;
+}

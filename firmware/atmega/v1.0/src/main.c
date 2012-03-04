@@ -38,18 +38,13 @@ int main(void) {
 	sei();
 
 	for(;;) {
-		// uart_string_tx("Hello\n", 6);
-		// _delay_ms(1000);
-	}
-
-	for(;;) {
 		if(compute_flag != 0) {
 			hif_output = 0;
 			
 			if (adc_val(2) > 511)
-				hif_output += sawtooth(((adc_val(0) >> 3) + 1));
+				hif_output += sawtooth(get_pitch() + 1);
 			else
-				hif_output += triangle(((adc_val(0) >> 2) + 1));
+				hif_output += triangle(get_pitch() + 1);
 			
 			/*
 			x_n[filter_idx] = hif_output;
@@ -70,13 +65,11 @@ int main(void) {
 }
 
 void hf_sample(void) {
-	if(compute_flag != 0) {
-		too_slow_flag = 1;
+	if(compute_flag == 0) {
+		serial_dac(hif_output);
+		compute_flag = 1;
 	} else {
-		if(!is_lossy() && too_slow_flag == 0) {
-			serial_dac(hif_output);
-			compute_flag = 1;
-		}
+		too_slow_flag = 1;
 	}
 }
 
