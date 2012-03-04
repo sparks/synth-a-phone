@@ -1,5 +1,10 @@
-#ifndef FILTERS_H_
-#define FILTERS_H_
+/**
+@file filters.h
+@brief
+*/
+
+#ifndef FILTERS_H
+#define FILTERS_H
 
 #include <avr/io.h>
 

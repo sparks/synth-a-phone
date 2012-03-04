@@ -1,3 +1,8 @@
+/**
+@file filters.c
+@brief
+*/
+
 #include "filters.h"
 
 int low_pass(uint16_t* yn) {
