@@ -9,6 +9,7 @@
 #include "dac.h"
 #include "timer.h"
 #include "uart.h"
+#include "midi.h"
 
 #include "distortion.h"
 #include "wavetable.h"
@@ -20,7 +21,6 @@
 
 void hf_sample(void);
 void lf_sample(void);
-void uart_callback(void);
 
 volatile uint8_t too_slow_flag = 0;
 volatile uint8_t compute_flag = 0;
@@ -67,16 +67,6 @@ int main(void) {
 	}
 	
 	return 0;
-}
-
-void uart_callback(void) {
-	if(uart_available() >= 3) {
-		uint8_t str[3];
-		uart_string_rx(&str, 3);
-		uart_string_tx(&str, 3);
-	}
-
-	return;
 }
 
 void hf_sample(void) {

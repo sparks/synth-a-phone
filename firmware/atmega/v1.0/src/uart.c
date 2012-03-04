@@ -7,17 +7,23 @@
 
 #include <avr/interrupt.h>
 
+/**
+ * The UART baud rate to transmit at.
+*/
 #define BAUD_RATE 115200
 #define UBRR ((F_CPU/8/BAUD_RATE)- 1)
+/**
+ * The length of the send and receive buffers to be allocated for UART communication.
+*/
 #define BUF_LEN 8
 
 uart_callback_t uart_callback;
 
 uint8_t in_head, in_tail = 0;
-char in_buf[BUF_LEN];
+uint8_t in_buf[BUF_LEN];
 
 uint8_t out_head, out_tail = 0;
-char out_buf[BUF_LEN];
+uint8_t out_buf[BUF_LEN];
 
 void uart_init(uart_callback_t c) {
 	uart_callback = c;
@@ -42,7 +48,7 @@ void uart_tx(uint8_t val) {
 	}	
 }
 
-void uart_string_tx(char* buf, uint8_t buf_len) {
+void uart_string_tx(uint8_t* buf, uint8_t buf_len) {
 	uint8_t empty = 0;
 	if(out_head == out_tail) empty = 1; //Check if the buf is empty when we start
 
@@ -77,7 +83,7 @@ uint8_t uart_available(void) {
 	return available;
 }
 
-void uart_string_rx(char* buf, uint8_t buf_len) {
+void uart_string_rx(uint8_t* buf, uint8_t buf_len) {
 	uint8_t i; //Precompute next tail
 
 	for(i = 0;i < buf_len;i++) { //Foreach

@@ -8,4 +8,6 @@
 
 #include <avr/io.h>
 
+void uart_callback(void);
+
 #endif SYNTH_MIDI
