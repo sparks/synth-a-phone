@@ -1,10 +1,12 @@
 /**
-@file synthesis.c
-@brief
+@file osc.c
 */
 
-#include "synthesis.h"
-#include "wavetable.h"
+#include "osc.h"
+#include <math.h>
+
+#define WAVETABLE_WIDTH 500
+#define PI 3.14159265
 
 uint16_t constrain(uint16_t num, uint16_t min, uint16_t max);
 
@@ -14,6 +16,18 @@ uint16_t ramp_saw = 0;
 uint16_t ramp_tri = 0;
 uint16_t ramp_squ = 0;
 uint16_t ramp_sin = 0;
+
+uint16_t sine_lookup[WAVETABLE_WIDTH];
+
+void sine_init(void) {
+	int i;
+	for (i = 0; i < WAVETABLE_WIDTH; i++) {
+		// creates a lookup table of one wavelength of sine of WAVETABLE_WIDTH
+		// first offset by 1 because it's unsigned
+		// multiplied by the halfwidth of the 12bit dac
+		sine_lookup[i] = (uint16_t)((0xFFF >> 1) * (sin(i * 2 * PI / WAVETABLE_WIDTH) + 1));
+	}
+}
 
 uint16_t sawtooth(uint16_t freq) {
 	ramp_saw += freq;
@@ -35,7 +49,7 @@ uint16_t triangle(uint16_t freq) {
 	return ramp_tri; 
 }
 
-uint16_t square(uint16_t freq) {
+uint16_t pulse(uint16_t freq) {
 	count += freq;
 
 	if(count >= 0xFFF) {
@@ -59,11 +73,4 @@ uint16_t constrain(uint16_t num, uint16_t min, uint16_t max) {
 	if(num > max) return max;
 	else if(num < min) return min;
 	else return num;
-}
-
-/* takes the 10 bit pot value
- * ups it to 16 bits
- */
-uint16_t up10to16(uint16_t int10) {
-	return int10;	
 }

@@ -11,10 +11,8 @@
 #include "uart.h"
 #include "midi.h"
 
-#include "distortion.h"
-#include "wavetable.h"
-#include "synthesis.h"
-#include "filters.h"
+#include "osc.h"
+#include "effects.h"
 
 #include <avr/interrupt.h>
 #include <util/delay.h>
