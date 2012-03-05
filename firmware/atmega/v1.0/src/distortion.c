@@ -9,5 +9,7 @@
 
 void clip(uint16_t *val) {
 
-	*val <<= 2;
+	if(*val > 3095) *val = 3095;
+	else if(*val < 1000) *val = 1000;
+
 }

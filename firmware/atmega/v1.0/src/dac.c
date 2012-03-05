@@ -53,8 +53,8 @@ void par_dac(uint16_t value) {
 	if(par_dac_state == IDLE) {
 		par_dac_state = FIRST_BYTE;
 
-		PORTD &= ~(1 << PAR_DAC_WR); //Low write
-		PORTD &= ~(1 << PAR_DAC_AB); //low ab
+		PORTD |= (1 << PAR_DAC_WR); //high write
+		PORTD |= (1 << PAR_DAC_AB); //high ab
 
 		PORTC &= ~(0x0F << PAR_DAC_NIBBLE_LOW);
 		PORTD &= ~(0x0F << PAR_DAC_NIBBLE_HIGH);
@@ -62,12 +62,12 @@ void par_dac(uint16_t value) {
 		PORTC |= ((value & 0x0F) << PAR_DAC_NIBBLE_LOW);
 		PORTD |= (((value >> 4) & 0x0F) << PAR_DAC_NIBBLE_HIGH);
 
-		PORTD |= (1 << PAR_DAC_WR); //high write
+		PORTD &= ~(1 << PAR_DAC_WR); //Low write
 
 		par_dac_state = SECOND_BYTE;
 
-		PORTD &= ~(1 << PAR_DAC_WR); //Low write
-		PORTD |= (1 << PAR_DAC_AB); //high ab
+		PORTD |= (1 << PAR_DAC_WR); //high write
+		PORTD &= ~(1 << PAR_DAC_AB); //low ab
 
 		PORTC &= ~(0x0F << PAR_DAC_NIBBLE_LOW);
 		PORTD &= ~(0x0F << PAR_DAC_NIBBLE_HIGH);
@@ -75,9 +75,11 @@ void par_dac(uint16_t value) {
 		PORTC |= (((value >> 8) & 0x0F) << PAR_DAC_NIBBLE_LOW);
 		PORTD |= (((value >> 12) & 0x0F) << PAR_DAC_NIBBLE_HIGH);
 
-		PORTD |= (1 << PAR_DAC_WR); //high write
+		PORTD &= ~(1 << PAR_DAC_WR); //Low write
 
 		par_dac_state = IDLE;
+
+		PORTD |= (1 << PAR_DAC_WR); //high write
 	} else {
 		lossy_flag = 1;
 	}

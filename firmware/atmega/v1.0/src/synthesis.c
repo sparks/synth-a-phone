@@ -23,10 +23,10 @@ uint16_t sawtooth(uint16_t freq) {
 }
 
 uint16_t triangle(uint16_t freq) {
-	if(direction == 0) ramp_tri += freq;
-	else ramp_tri -= freq;
+	if(direction == 0) ramp_tri += freq << 1;
+	else ramp_tri -= freq << 1;
 
-	if(ramp_tri >= 0xFFF || ramp_tri == 0) {
+	if(ramp_tri >= 0xFFF) {
 		if(direction == 0) ramp_tri = 0xFFF;
 		else ramp_tri = 0;
 		direction = (direction + 1) % 2;
