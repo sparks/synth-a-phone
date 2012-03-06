@@ -19,5 +19,5 @@ int16_t pulse(uint16_t freq);
 int16_t sine(uint16_t freq);
 
 void add_uint24(uint24_t a, uint24_t b, uint24_t result);
-void sine_uint24(uint24_t freq, uint24_t out);
+int16_t sine_uint24(uint24_t freq);
 #endif
