@@ -8,7 +8,7 @@
 
 #include <avr/io.h>
 
-int low_pass(uint16_t* yn);
-void clip(uint16_t* val);
+int low_pass(int16_t* yn);
+void clip(int16_t* val);
 
 #endif
