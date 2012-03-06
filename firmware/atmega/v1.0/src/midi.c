@@ -5,7 +5,6 @@
 
 #include "midi.h"
 #include "uart.h"
-#include <avr/pgmspace.h>
 
 uint8_t pitch = 100;
 uint8_t velocity = 0;

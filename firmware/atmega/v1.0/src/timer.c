@@ -13,7 +13,7 @@
 #define TIMER_HF_FREQ	31250 //~ 55k max for para and ~45k for ser
 #define TIMER_HF_PERIOD	F_CPU/8/TIMER_HF_FREQ
 
-#define TIMER_LF_FREQ 40
+#define TIMER_LF_FREQ 100
 #define TIMER_LF_PERIOD F_CPU/8/TIMER_LF_FREQ
 
 timer_callback_t hf_timer_callback;
