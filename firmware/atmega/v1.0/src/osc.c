@@ -64,12 +64,12 @@ int16_t pulse(uint16_t freq) {
 }
 
 // takes as input 24 bit freq as 8x3 array
-void sine_uint24(uint24_t freq, uint24_t out) {
+int16_t sine_uint24(uint24_t freq) {
 	uint24_t old_ramp_sin_24;
 	memcpy(&old_ramp_sin_24, &ramp_sin_24, sizeof(uint24_t));
 	add_uint24(freq, old_ramp_sin_24, ramp_sin_24);
 
-	out[2] = sine_lookup[ramp_sin_24[2]];
+	return sine_lookup[ramp_sin_24[2]];
 
 }
 

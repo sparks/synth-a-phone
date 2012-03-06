@@ -34,12 +34,16 @@ int main(void) {
 	timer_init(&hf_sample, &lf_sample);
 	uart_init(&uart_callback);
 	
+	//init sine
+	sine_init();
+	uint24_t freq = {0,0,1};
+
 	sei();
 
 	for(;;) {
 		if(compute_flag != 0) {
 			hif_output = 0;
-			hif_output += (pulse(100));
+			hif_output += (sine_uint24(freq));
 			compute_flag = 0;
 		}
 	}
