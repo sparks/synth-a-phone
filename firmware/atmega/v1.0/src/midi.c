@@ -11,6 +11,8 @@ uint8_t pitch = 100;
 uint8_t velocity = 0;
 uint8_t midi_msg[3];
 
+//freq = 440 * 2^((n-60)/12)
+
 //Octave 0 MIDI reference
 // Middle	0	60	C	261.6255653006	-900.00
 // Middle	0	61	C#/Db	277.1826309769	-800.00

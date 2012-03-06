@@ -24,7 +24,7 @@ COMPILE = avr-gcc -Wall -Os -DF_CPU=$(CLOCK) -mmcu=$(DEVICE)
 
 ##Main Targets##
 
-all: bin_dir $(BIN_DIR)/$(NAME).hex
+all: bin_dir $(BIN_DIR)/$(NAME).hex size
 
 #For XCode
 install: flash
@@ -38,8 +38,8 @@ fuse:
 doxygen: doc_dir
 	doxygen $(DOXY_CONF)
 
-test:
-	echo $(SOURCES)
+size: bin_dir $(BIN_DIR)/$(NAME).hex
+	avr-size $(BIN_DIR)/$(NAME).hex
 
 bin_dir:
 	@mkdir -p bin

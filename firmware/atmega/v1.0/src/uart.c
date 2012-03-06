@@ -12,7 +12,7 @@
 */
 // #define BAUD_RATE 31250 //Midi rate
 #define BAUD_RATE 115200
-#define UBRR ((F_CPU/8/BAUD_RATE)- 1)
+#define UBRR ((F_CPU+BAUD_RATE*4L)/(BAUD_RATE*8L)-1)
 /**
  * The length of the send and receive buffers to be allocated for UART communication.
 */

@@ -1,6 +1,6 @@
 /**
 @file uart.h
-@brief
+@brief Provide simple lightweight access to send and recieve single bytes or short strings via UART.
 */
 
 #ifndef SYNTH_UART

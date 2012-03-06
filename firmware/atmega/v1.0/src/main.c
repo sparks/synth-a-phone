@@ -11,10 +11,8 @@
 #include "uart.h"
 #include "midi.h"
 
-#include "distortion.h"
-#include "wavetable.h"
-#include "synthesis.h"
-#include "filters.h"
+#include "osc.h"
+#include "effects.h"
 
 #include <avr/interrupt.h>
 #include <util/delay.h>
@@ -42,9 +40,9 @@ int main(void) {
 			hif_output = 0;
 			
 			if (adc_val(2) > 511)
-				hif_output += sawtooth(get_pitch() + 1);
+				hif_output += sawtooth((adc_val(0) >> 3) + 1);
 			else
-				hif_output += triangle(get_pitch() + 1);
+				hif_output += triangle((adc_val(0) >> 3) + 1);
 			
 			/*
 			x_n[filter_idx] = hif_output;
@@ -67,6 +65,7 @@ int main(void) {
 void hf_sample(void) {
 	if(compute_flag == 0) {
 		serial_dac(hif_output);
+		// par_dac(hif_output);
 		compute_flag = 1;
 	} else {
 		too_slow_flag = 1;
