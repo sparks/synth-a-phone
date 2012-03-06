@@ -4,8 +4,9 @@
 
 #include "osc.h"
 #include <math.h>
+#include <string.h>
 
-#define WAVETABLE_WIDTH 500
+#define WAVETABLE_WIDTH 256
 #define PI 3.14159265
 
 uint16_t constrain(uint16_t num, uint16_t min, uint16_t max);
@@ -16,6 +17,7 @@ uint16_t ramp_saw = 0;
 uint16_t ramp_tri = 0;
 uint16_t ramp_squ = 0;
 uint16_t ramp_sin = 0;
+uint24_t ramp_sin_24 = {0,0,0};
 
 uint16_t sine_lookup[WAVETABLE_WIDTH];
 
@@ -59,6 +61,31 @@ uint16_t pulse(uint16_t freq) {
 	}
 
 	return ramp_squ;
+}
+
+// takes as input 24 bit freq as 8x3 array
+void sine_uint24(uint24_t freq, uint24_t out) {
+	uint24_t old_ramp_sin_24;
+	memcpy(&old_ramp_sin_24, &ramp_sin_24, sizeof(uint24_t));
+	add_uint24(freq, old_ramp_sin_24, ramp_sin_24);
+
+	out[2] = sine_lookup[ramp_sin_24[2]];
+
+}
+
+// adds uint24_t a + b
+void add_uint24(uint24_t a, uint24_t b, uint24_t result){
+	result[0] = a[0] + b[0];
+	//check for overflow
+	if(SREG|1) {
+		a[1]++;
+		//check for overflow
+		if(SREG|1) a[2]++; //if a[2] overlows, it will be set to 0
+	}
+	result[1] = a[1] + b[1];
+	//check for overlfow
+	if(SREG|1) a[2]++;
+	result[2] = a[2] + b[2];
 }
 
 uint16_t sine(uint16_t freq) {
