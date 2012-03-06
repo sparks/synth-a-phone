@@ -5,8 +5,8 @@
 
 #include "adsr.h"
 
-uint8_t times[5] = {0, 40, 80, 120, 160};
-uint8_t levels[5] = {0, 255, 255, 255, 0};
+uint8_t times[5] = {0, 5, 25, 30, 60};
+uint8_t levels[5] = {0, 255, 175, 175, 0};
 
 uint8_t gate = 0;
 uint8_t cur_time = 0xFF;

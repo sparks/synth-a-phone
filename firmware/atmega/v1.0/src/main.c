@@ -24,8 +24,7 @@ void lf_sample(void);
 volatile uint8_t too_slow_flag = 0;
 volatile uint8_t compute_flag = 0;
 int16_t hif_output = 0;
-int8_t env = 0;
-uint16_t countt = 0;
+uint8_t env = 0;
 
 int main(void) {
 
@@ -33,13 +32,13 @@ int main(void) {
 	dac_init();
 	timer_init(&hf_sample, &lf_sample);
 	uart_init(&uart_callback);
-	
+	sine_init();
 	sei();
 
 	for(;;) {
 		if(compute_flag != 0) {
 			hif_output = 0;
-			hif_output += (pulse(100));
+			hif_output += ((triangle(100)>>4)*env)>>4;
 			compute_flag = 0;
 		}
 	}
@@ -58,9 +57,6 @@ void hf_sample(void) {
 }
 
 void lf_sample(void) {
-	if(countt%500 == 0) trig_gate(1);
-	else if(countt%250 == 0) trig_gate(0);
-	countt++;
 	env = adsr_value();
 	adc_trigger();
 }
