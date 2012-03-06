@@ -77,14 +77,14 @@ int16_t sine_uint24(uint24_t freq) {
 void add_uint24(uint24_t a, uint24_t b, uint24_t result){
 	result[0] = a[0] + b[0];
 	//check for overflow
-	if(SREG|1) {
+	if(SREG&1) {
 		a[1]++;
 		//check for overflow
-		if(SREG|1) a[2]++; //if a[2] overlows, it will be set to 0
+		if(SREG&1) a[2]++; //if a[2] overlows, it will be set to 0
 	}
 	result[1] = a[1] + b[1];
 	//check for overlfow
-	if(SREG|1) a[2]++;
+	if(SREG&1) a[2]++;
 	result[2] = a[2] + b[2];
 }
 

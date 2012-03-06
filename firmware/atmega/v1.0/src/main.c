@@ -35,7 +35,7 @@ int main(void) {
 	
 	//init sine
 	sine_init();
-	uint24_t freq = {0,0,1};
+	uint24_t freq = {1,0,0};
 	sei();
 
 	for(;;) {
