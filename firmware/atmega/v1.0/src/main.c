@@ -11,6 +11,7 @@
 #include "uart.h"
 #include "midi.h"
 
+#include "adsr.h"
 #include "osc.h"
 #include "effects.h"
 
@@ -22,11 +23,11 @@ void lf_sample(void);
 
 volatile uint8_t too_slow_flag = 0;
 volatile uint8_t compute_flag = 0;
-uint16_t hif_output = 0;
-
+int16_t hif_output = 0;
+int8_t env = 0;
+uint16_t countt = 0;
 
 int main(void) {
-	uint8_t filter_idx = 0;
 
 	adc_init();
 	dac_init();
@@ -38,23 +39,7 @@ int main(void) {
 	for(;;) {
 		if(compute_flag != 0) {
 			hif_output = 0;
-			
-			if (adc_val(2) > 511)
-				hif_output += sawtooth((adc_val(0) >> 3) + 1);
-			else
-				hif_output += triangle((adc_val(0) >> 3) + 1);
-			
-			/*
-			x_n[filter_idx] = hif_output;
-			filter_idx++;
-			if(filter_idx >= FILTER_1_ORDER) filter_idx = filter_idx%FILTER_1_ORDER;
-			
-			low_pass(&y_n[filter_idx]);
-			*/
-			
-			if (adc_val(1) > 511)
-				clip(&hif_output);
-				
+			hif_output += (pulse(100));
 			compute_flag = 0;
 		}
 	}
@@ -64,7 +49,7 @@ int main(void) {
 
 void hf_sample(void) {
 	if(compute_flag == 0) {
-		serial_dac(hif_output);
+		serial_dac(hif_output+2048);
 		// par_dac(hif_output);
 		compute_flag = 1;
 	} else {
@@ -73,5 +58,9 @@ void hf_sample(void) {
 }
 
 void lf_sample(void) {
+	if(countt%500 == 0) trig_gate(1);
+	else if(countt%250 == 0) trig_gate(0);
+	countt++;
+	env = adsr_value();
 	adc_trigger();
 }

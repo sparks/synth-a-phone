@@ -14,6 +14,7 @@ NAME       = main
 SRC_DIR    = src
 BIN_DIR    = bin
 SOURCES    = $(wildcard $(SRC_DIR)/*.c) $(wildcard $(SRC_DIR)/*.cpp)
+ASMFILES   = $(patsubst $(SRC_DIR)/%.c, $(BIN_DIR)/%.S, $(SOURCES))
 OBJECTS    = $(patsubst $(SRC_DIR)/%.c, $(BIN_DIR)/%.o, $(SOURCES))
 DOXY_CONF  = doxygen.conf
 
@@ -25,6 +26,8 @@ COMPILE = avr-gcc -Wall -Os -DF_CPU=$(CLOCK) -mmcu=$(DEVICE)
 ##Main Targets##
 
 all: bin_dir $(BIN_DIR)/$(NAME).hex size
+
+asm: bin_dir $(ASMFILES)
 
 #For XCode
 install: flash
@@ -76,7 +79,7 @@ $(BIN_DIR)/%.o: $(SRC_DIR)/%.S
 	$(COMPILE) -x assembler-with-cpp -c $< -o $@
 
 #Compile assembler only
-$(SRC_DIR)/%.S: $(SRC_DIR)/%.c
+$(BIN_DIR)/%.S: $(SRC_DIR)/%.c
 	$(COMPILE) -S $< -o $@
 
 ##Other##
