@@ -8,7 +8,7 @@
 
 #include <avr/io.h>
 
-void trig_gate(uint8_t gate);
+void trig_gate(uint8_t new_gate);
 uint8_t adsr_value(void);
 
 #endif

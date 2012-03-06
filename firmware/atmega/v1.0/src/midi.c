@@ -5,6 +5,7 @@
 
 #include "midi.h"
 #include "uart.h"
+#include "adsr.h"
 
 uint8_t pitch = 100;
 uint8_t velocity = 0;
@@ -34,16 +35,21 @@ void uart_callback(void) {
 		midi_msg[2] = uart_rx();
 
 		switch((midi_status_t)(midi_msg[0] & 0xF0)) {
-			case NoteOff:
-				pitch = midi_msg[1];
-				velocity = 0;
-				break;
-
 			case NoteOn:
-				pitch = midi_msg[1];
-				velocity = midi_msg[2];
-				break;
+				if(midi_msg[2] != 0) {
+					pitch = midi_msg[1];
+					velocity = midi_msg[2];
+					trig_gate(0);
+					trig_gate(1);
+					break;
+				}
 
+			case NoteOff:
+				if(pitch == midi_msg[1]) {
+					velocity = 0;
+					trig_gate(0);
+				}
+				break;
 			default:
 				break;
 		}
