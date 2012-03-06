@@ -15,6 +15,9 @@ uint16_t ramp_tri = 0;
 uint16_t ramp_squ = 0;
 uint16_t ramp_sin = 0;
 
+// 3 x 8 bit type
+typedef int 24uint_t[3];
+
 uint16_t sawtooth(uint16_t freq) {
 	ramp_saw += freq;
 	if(ramp_saw > 0xFFF) ramp_saw = 0;
