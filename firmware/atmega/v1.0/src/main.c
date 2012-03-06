@@ -41,8 +41,10 @@ int main(void) {
 	for(;;) {
 		if(compute_flag != 0) {
 			hif_output = 0;
-			// hif_output += ((triangle(100)>>4)*env)>>4;
-			hif_output += (sine_uint24(freq));
+			if(adc_val(0) > 512) hif_output += ((triangle(get_pitch())>>4)*env)>>4;
+			else hif_output += ((sawtooth(get_pitch())>>4)*env)>>4;
+			// hif_output += (sine_uint24(freq));
+			if(adc_val(2) > 512) clip(&hif_output);
 			compute_flag = 0;
 		}
 	}
