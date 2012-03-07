@@ -5,7 +5,7 @@
 
 #include "adsr.h"
 
-uint8_t times[5] = {0, 2, 25, 30, 100};
+uint8_t times[5] = {0, 5, 25, 30, 60};
 uint8_t levels[5] = {0, 200, 170, 170, 0};
 
 uint8_t gate = 0;

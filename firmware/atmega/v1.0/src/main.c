@@ -54,9 +54,11 @@ int main(void) {
 
 void hf_sample(void) {
 	if(compute_flag == 0) {
-		serial_dac(hif_output+2048);
-		// par_dac(hif_output);
-		compute_flag = 1;
+		// if(!too_slow_flag) {
+			serial_dac(hif_output+2048);
+			// par_dac(hif_output);
+			compute_flag = 1;
+		// }
 	} else {
 		too_slow_flag = 1;
 	}
