@@ -26,6 +26,8 @@ volatile uint8_t compute_flag = 0;
 int16_t hif_output = 0;
 uint8_t env = 0;
 
+uint24_t freq = {0,0,2};
+
 int main(void) {
 
 	adc_init();
@@ -35,7 +37,6 @@ int main(void) {
 	
 	//init sine
 	sine_init();
-	uint24_t freq = {0,1,0};
 	sei();
 
 	for(;;) {
@@ -54,11 +55,11 @@ int main(void) {
 
 void hf_sample(void) {
 	if(compute_flag == 0) {
-		// if(!too_slow_flag) {
+		if(!too_slow_flag) {
 			serial_dac(hif_output+2048);
 			// par_dac(hif_output);
 			compute_flag = 1;
-		// }
+		}
 	} else {
 		too_slow_flag = 1;
 	}
@@ -66,5 +67,8 @@ void hf_sample(void) {
 
 void lf_sample(void) {
 	env = adsr_value();
+	freq[0] = adc_val(0) >> 2;
+	freq[1] = adc_val(2) >> 2;
+	freq[2] = adc_val(1) >> 2;
 	adc_trigger();
 }
