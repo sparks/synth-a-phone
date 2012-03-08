@@ -18,6 +18,8 @@
 #include <avr/interrupt.h>
 #include <util/delay.h>
 
+#define USING_KEYS 0 // Using an actual keyboard?
+
 void hf_sample(void);
 void lf_sample(void);
 
@@ -41,13 +43,28 @@ int main(void) {
 	for(;;) {
 		if(compute_flag != 0) {
 			hif_output = 0;
-			if(adc_val(1) < 350) {
-				hif_output += ((sine_uint24(freq)>>4)*env)>>4;
-			} else if(adc_val(1) < 700) {
-				hif_output += ((sawtooth(freq[2])>>4)*env)>>4;
+			
+			if (USING_KEYS) {
+			
+				if(adc_val(1) < 350) {
+					hif_output += ((sine_uint24(freq)>>4)*env)>>4;
+				} else if(adc_val(1) < 700) {
+					hif_output += ((sawtooth(freq[2])>>4)*env)>>4;
+				} else {
+					hif_output += ((triangle(freq[2])>>4)*env)>>4;
+				}
+				
 			} else {
-				hif_output += ((triangle(freq[2])>>4)*env)>>4;
+				
+				// Stacked wave.
+				hif_output += sine_uint24(freq)>>1;
+				hif_output += triangle(freq[2]<<2)>>1;
+			
+				if (adc_val(0) > 512) {
+					clip(&hif_output);
+				}
 			}
+			
 			compute_flag = 0;
 		}
 	}
@@ -69,15 +86,27 @@ void hf_sample(void) {
 
 void lf_sample(void) {
 	env = adsr_value();
-	get_delta(freq);
-	uint8_t detune[3];
-	detune[0] = adc_val(0) >> 2;
-	detune[1] = adc_val(2) >> 2;
-	detune[2] = 0;
-	asm volatile(	"add %0, %3" "\n\t"
-			"adc %1, %4" "\n\t"
-			"adc %2, %5" "\n\t" :
-		"+r" (freq[0]), "+r" (freq[1]), "+r" (freq[2]),
-		"+r" (detune[0]), "+r" (detune[1]), "+r" (detune[2]));
+	
+	if (USING_KEYS) {
+	
+		get_delta(freq);
+		uint8_t detune[3];
+		detune[0] = adc_val(0) >> 2;
+		detune[1] = adc_val(2) >> 2;
+		detune[2] = 0;
+		
+		asm volatile(	"add %0, %3" "\n\t"
+				"adc %1, %4" "\n\t"
+				"adc %2, %5" "\n\t" :
+			"+r" (freq[0]), "+r" (freq[1]), "+r" (freq[2]),
+			"+r" (detune[0]), "+r" (detune[1]), "+r" (detune[2]));
+			
+	} else {
+	
+		freq[0] = 0; //adc_val(0) >> 2;
+		freq[1] = adc_val(2) >> 2;
+		freq[2] = adc_val(1) >> 2;	
+	}	
+		
 	adc_trigger();
 }

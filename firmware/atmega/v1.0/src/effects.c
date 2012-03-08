@@ -16,6 +16,7 @@ int low_pass(int16_t* yn) {
 }
 
 void clip(int16_t *val) {
-	if(*val > 1000) *val = 1000;
-	else if(*val < -1000) *val = -1000;
+	
+	if(*val > MAX) *val = MAX;
+	else if(*val < -MAX) *val = -MAX;
 }
