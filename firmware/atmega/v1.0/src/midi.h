@@ -7,6 +7,7 @@
 #define SYNTH_MIDI
 
 #include <avr/io.h>
+#include "osc.h"
 
 typedef enum {
 	NoteOff	              = 0x80,	//Note Off
@@ -37,5 +38,6 @@ void uart_callback(void);
 
 uint8_t get_velocity(void);
 uint8_t get_pitch(void);
+void get_delta(uint8_t*);
 
 #endif

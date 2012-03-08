@@ -18,7 +18,7 @@ int16_t ramp_tri = 0;
 int16_t squ_value = 0;
 uint16_t ramp_squ = 0;
 uint16_t ramp_sin = 0;
-uint24_t ramp_sin_24 = {0,0,0};
+uint8_t ramp_sin_24[3] = {0,0,0};
 
 uint32_t test_a, test_b, test_c;
 
@@ -68,12 +68,12 @@ int16_t pulse(uint16_t freq) {
 
 // takes as input 24 bit (8x3 array) freq (period)
 // ramp_sin_24 is incremented by freq and the last byte is used in the look up table to get the sine value
-int16_t sine_uint24(uint24_t freq) {
+int16_t sine_uint24(uint8_t* freq) {
 	// some super awesome assembly code to add 24 bit numbers
 	asm volatile(	"add %0, %3" "\n\t"
 			"adc %1, %4" "\n\t"
 			"adc %2, %5" "\n\t" :
-			"+r" (ramp_sin_24[0]), "+r" (ramp_sin_24[1]), "+r"(ramp_sin_24[2]),
+			"+r" (ramp_sin_24[0]), "+r" (ramp_sin_24[1]), "+r" (ramp_sin_24[2]),
 			"+r" (freq[0]), "+r" (freq[1]), "+r" (freq[2]));
 
 	return sine_lookup[ramp_sin_24[2]];	

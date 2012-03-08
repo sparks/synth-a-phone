@@ -25,8 +25,7 @@ volatile uint8_t too_slow_flag = 0;
 volatile uint8_t compute_flag = 0;
 int16_t hif_output = 0;
 uint8_t env = 0;
-
-uint24_t freq = {0,0,2};
+uint8_t freq[3] = {0, 0, 1};
 
 int main(void) {
 
@@ -42,10 +41,13 @@ int main(void) {
 	for(;;) {
 		if(compute_flag != 0) {
 			hif_output = 0;
-			//if(adc_val(0) > 512) hif_output += ((triangle(get_pitch())>>4)*env)>>4;
-			//else hif_output += ((sawtooth(get_pitch())>>4)*env)>>4;
-			hif_output += (sine_uint24(freq));
-			//if(adc_val(2) > 512) clip(&hif_output);
+			if(adc_val(1) < 350) {
+				hif_output += ((sine_uint24(freq)>>4)*env)>>4;
+			} else if(adc_val(1) < 700) {
+				hif_output += ((sawtooth(freq[2])>>4)*env)>>4;
+			} else {
+				hif_output += ((triangle(freq[2])>>4)*env)>>4;
+			}
 			compute_flag = 0;
 		}
 	}
@@ -55,11 +57,11 @@ int main(void) {
 
 void hf_sample(void) {
 	if(compute_flag == 0) {
-		if(!too_slow_flag) {
+		// if(!too_slow_flag) {
 			serial_dac(hif_output+2048);
 			// par_dac(hif_output);
 			compute_flag = 1;
-		}
+		// }
 	} else {
 		too_slow_flag = 1;
 	}
@@ -67,8 +69,15 @@ void hf_sample(void) {
 
 void lf_sample(void) {
 	env = adsr_value();
-	freq[0] = adc_val(0) >> 2;
-	freq[1] = adc_val(2) >> 2;
-	freq[2] = adc_val(1) >> 2;
+	get_delta(freq);
+	uint8_t detune[3];
+	detune[0] = adc_val(0) >> 2;
+	detune[1] = adc_val(2) >> 2;
+	detune[2] = 0;
+	asm volatile(	"add %0, %3" "\n\t"
+			"adc %1, %4" "\n\t"
+			"adc %2, %5" "\n\t" :
+		"+r" (freq[0]), "+r" (freq[1]), "+r" (freq[2]),
+		"+r" (detune[0]), "+r" (detune[1]), "+r" (detune[2]));
 	adc_trigger();
 }
