@@ -66,17 +66,10 @@ int16_t pulse(uint16_t freq) {
 	return squ_value;
 }
 
-// takes as input 24 bit freq as 8x3 array
+// takes as input 24 bit (8x3 array) freq (period)
+// ramp_sin_24 is incremented by freq and the last byte is used in the look up table to get the sine value
 int16_t sine_uint24(uint24_t freq) {
-	uint24_t old_ramp_sin_24;
-	memcpy(&old_ramp_sin_24, &ramp_sin_24, sizeof(uint24_t));
-	add_uint24(freq, old_ramp_sin_24, ramp_sin_24);
-
-	return sine_lookup[ramp_sin_24[2]];
-
-}
-
-int16_t sine_uint24_asm(uint24_t freq) {
+	// some super awesome assembly code to add 24 bit numbers
 	asm volatile(	"add %0, %3" "\n\t"
 			"adc %1, %4" "\n\t"
 			"adc %2, %5" "\n\t" :
@@ -84,27 +77,6 @@ int16_t sine_uint24_asm(uint24_t freq) {
 			"+r" (freq[0]), "+r" (freq[1]), "+r" (freq[2]));
 
 	return sine_lookup[ramp_sin_24[2]];	
-}
-
-//test
-void add_32(void){
-	test_c = test_a + test_b;
-}	
-	
-
-// adds uint24_t a + b
-void add_uint24(uint24_t a, uint24_t b, uint24_t result){
-	result[0] = a[0] + b[0];
-	//check for overflow
-	if(SREG|1) {
-		a[1]++;
-		//check for overflow
-		if(SREG|1) a[2]++; //if a[2] overlows, it will be set to 0
-	}
-	result[1] = a[1] + b[1];
-	//check for overlfow
-	if(SREG|1) a[2]++;
-	result[2] = a[2] + b[2];
 }
 
 int16_t sine(uint16_t freq) {
