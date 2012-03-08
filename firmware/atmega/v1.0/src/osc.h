@@ -20,4 +20,5 @@ int16_t sine(uint16_t freq);
 
 void add_uint24(uint24_t a, uint24_t b, uint24_t result);
 int16_t sine_uint24(uint24_t freq);
+int16_t sine_uint24_asm(uint24_t freq);
 #endif

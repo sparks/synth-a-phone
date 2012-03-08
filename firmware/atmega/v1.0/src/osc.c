@@ -20,6 +20,8 @@ uint16_t ramp_squ = 0;
 uint16_t ramp_sin = 0;
 uint24_t ramp_sin_24 = {0,0,0};
 
+uint32_t test_a, test_b, test_c;
+
 int16_t sine_lookup[WAVETABLE_WIDTH];
 
 void sine_init(void) {
@@ -67,13 +69,28 @@ int16_t pulse(uint16_t freq) {
 // takes as input 24 bit freq as 8x3 array
 int16_t sine_uint24(uint24_t freq) {
 	uint24_t old_ramp_sin_24;
-	uart_tx
 	memcpy(&old_ramp_sin_24, &ramp_sin_24, sizeof(uint24_t));
 	add_uint24(freq, old_ramp_sin_24, ramp_sin_24);
 
 	return sine_lookup[ramp_sin_24[2]];
 
 }
+
+int16_t sine_uint24_asm(uint24_t freq) {
+	asm volatile(	"add %0, %3" "\n\t"
+			"adc %1, %4" "\n\t"
+			"adc %2, %5" "\n\t" :
+			"+r" (ramp_sin_24[0]), "+r" (ramp_sin_24[1]), "+r"(ramp_sin_24[2]),
+			"+r" (freq[0]), "+r" (freq[1]), "+r" (freq[2]));
+
+	return sine_lookup[ramp_sin_24[2]];	
+}
+
+//test
+void add_32(void){
+	test_c = test_a + test_b;
+}	
+	
 
 // adds uint24_t a + b
 void add_uint24(uint24_t a, uint24_t b, uint24_t result){

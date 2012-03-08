@@ -35,16 +35,16 @@ int main(void) {
 	
 	//init sine
 	sine_init();
-	uint24_t freq = {1,0,0};
+	uint24_t freq = {0,1,0};
 	sei();
 
 	for(;;) {
 		if(compute_flag != 0) {
 			hif_output = 0;
-			if(adc_val(0) > 512) hif_output += ((triangle(get_pitch())>>4)*env)>>4;
-			else hif_output += ((sawtooth(get_pitch())>>4)*env)>>4;
-			// hif_output += (sine_uint24(freq));
-			if(adc_val(2) > 512) clip(&hif_output);
+			//if(adc_val(0) > 512) hif_output += ((triangle(get_pitch())>>4)*env)>>4;
+			//else hif_output += ((sawtooth(get_pitch())>>4)*env)>>4;
+			hif_output += (sine_uint24_asm(freq));
+			//if(adc_val(2) > 512) clip(&hif_output);
 			compute_flag = 0;
 		}
 	}
