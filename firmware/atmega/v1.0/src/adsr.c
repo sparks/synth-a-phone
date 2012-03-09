@@ -1,6 +1,6 @@
 /**
-@file adsr.c
-@brief
+\file adsr.c
+\brief
 */
 
 #include "adsr.h"

@@ -1,6 +1,6 @@
 /**
-@file dac.c
-@brief
+\file dac.c
+\brief
 */
 
 #include "dac.h"

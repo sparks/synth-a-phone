@@ -1,6 +1,6 @@
 /**
-@file osc.h
-@brief
+\file osc.h
+\brief
 */
 
 #ifndef SYNTH_OSCILLATORS
@@ -16,4 +16,5 @@ int16_t pulse(uint16_t freq);
 int16_t sine(uint16_t freq);
 
 int16_t sine_uint24(uint8_t* freq);
+
 #endif

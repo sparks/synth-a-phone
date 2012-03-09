@@ -1,21 +1,19 @@
 /**
-@file uart.c
-@brief
+\file uart.c
+\brief Provide simple access to send and recieve single bytes or short strings via UART.
 */
 
 #include "uart.h"
 
 #include <avr/interrupt.h>
 
-/**
- * The UART baud rate to transmit at.
-*/
+/** The UART baud rate to transmit at. */
 #define BAUD_RATE 31250 //Midi rate
-// #define BAUD_RATE 115200
+//#define BAUD_RATE 115200
+/** The resulting UBRR settings for the baud rate. */
 #define UBRR ((F_CPU+BAUD_RATE*4L)/(BAUD_RATE*8L)-1)
-/**
- * The length of the send and receive buffers to be allocated for UART communication.
-*/
+
+/** The length of the send and receive buffers to be allocated for UART communication. */
 #define BUF_LEN 16
 
 uart_callback_t uart_callback;
@@ -95,6 +93,11 @@ void uart_string_rx(uint8_t* buf, uint8_t buf_len) {
 	}
 }
 
+/**
+ * Handle the RX interrupt. Triggered when a byte is received.
+ *
+ * The received byte is placed in the inbound buffer and the uart callback is triggered.
+*/
 ISR(USART_RX_vect) {
 	in_buf[in_tail] = UDR0; //Grab new value
 	in_tail = (in_tail+1)%BUF_LEN; //Update tail
@@ -102,6 +105,11 @@ ISR(USART_RX_vect) {
 	(*uart_callback)(); //Callback
 }
 
+/**
+ * Handle the TX interrupt. Triggered when a byte is done sending.
+ *
+ * Check if there are more bytes to be sent. If so, another transmission is initiated.
+*/
 ISR(USART_TX_vect) {
 	out_head = (out_head+1)%BUF_LEN; //Increment the head
 	if(out_head != out_tail) UDR0 = out_buf[out_head]; //Keep sending

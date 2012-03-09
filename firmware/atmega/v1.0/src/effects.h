@@ -1,6 +1,6 @@
 /**
-@file effects.h
-@brief
+\file effects.h
+\brief
 */
 
 #ifndef SYNTH_EFFECTS

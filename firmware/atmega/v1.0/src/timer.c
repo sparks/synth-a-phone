@@ -1,6 +1,6 @@
 /**
-@file timer.c
-@brief
+\file timer.c
+\brief Provide simple implementation for two timers (8bit and 16bit), one low frequency and one highfrequency, with callbacks.
 */
 
 #include "timer.h"
@@ -10,10 +10,14 @@
 
 #include <avr/interrupt.h>
 
+/** The frequency of the HF timer. Range ~ [9.77kHz-2.5MHz] */
 #define TIMER_HF_FREQ	31250 //~ 55k max for para and ~45k for ser
+/** The resulting high frequency timer period. */
 #define TIMER_HF_PERIOD	F_CPU/8/TIMER_HF_FREQ
 
+/** The frequency of the LF timer. Range ~ [39HZ-2.5MHz] */
 #define TIMER_LF_FREQ 100
+/** The resulting low frequency timer period. */
 #define TIMER_LF_PERIOD F_CPU/8/TIMER_LF_FREQ
 
 timer_callback_t hf_timer_callback;
@@ -38,11 +42,18 @@ void timer_init(timer_callback_t hf, timer_callback_t lf) {
 	TIMSK1 = (0 << OCIE1B) | (1 << OCIE1A); //Interrupt enable 1A
 }
 
+/**
+ * Handle timer 0 interrupt/callback (8bit).
+ *
+*/
 ISR(TIMER0_COMPA_vect) {
 	(*hf_timer_callback)();
 }
 
-
+/**
+ * Handle timer 1 interrupt/callback (16bit).
+ *
+*/
 ISR(TIMER1_COMPA_vect) {
 	(*lf_timer_callback)();
 }

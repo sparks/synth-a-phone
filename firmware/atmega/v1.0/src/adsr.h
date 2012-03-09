@@ -1,6 +1,6 @@
 /**
-@file adsr.h
-@brief
+\file adsr.h
+\brief
 */
 
 #ifndef SYNTH_ADSR

@@ -1,6 +1,6 @@
 /**
-@file main.c
-@brief
+\file main.c
+\brief
 */
 
 #include "main.h"

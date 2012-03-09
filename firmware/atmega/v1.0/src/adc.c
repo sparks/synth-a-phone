@@ -1,14 +1,17 @@
 /**
-@file adc.c
-@brief
+\file adc.c
+\brief Provide a mechanism to easily get ADC (PORTC) values with externally controlled sampling rate.
 */
 
 #include "adc.h"
 
 #include <avr/interrupt.h>
 
+/** The first pin on PORTC to perform ADC conversion on. */
 #define ADC_MUX_MIN 4
+/** The last pin on PORTC to perfrom ADC conversion on. */
 #define ADC_MUX_MAX 7
+/** The number of pins on PORTC to perform ADC conversion on. */
 #define ADC_MUX_LEN ADC_MUX_MAX-ADC_MUX_MIN
 
 uint8_t mux_pointer = ADC_MUX_MIN;
@@ -36,7 +39,10 @@ uint16_t adc_val(uint8_t mux) {
 	else return ADC_ERROR_CODE;
 }
 
-
+/**
+ * Handle the ADC conversion complete interrupt. Get the ADC value and store it, then check if another adc conversion should be initated.
+ *
+*/
 ISR(ADC_vect) {
 	latest_values[mux_pointer-ADC_MUX_MIN] = ADCL;
 	latest_values[mux_pointer-ADC_MUX_MIN] |= ADCH << 8;

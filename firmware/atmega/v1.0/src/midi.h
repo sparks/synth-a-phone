@@ -1,6 +1,6 @@
 /**
-@file midi.h
-@brief
+\file midi.h
+\brief
 */
 
 #ifndef SYNTH_MIDI

@@ -1,6 +1,6 @@
 /**
-@file effects.c
-@brief
+\file effects.c
+\brief
 */
 
 #include "effects.h"

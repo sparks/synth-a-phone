@@ -1,5 +1,5 @@
 /**
-@file osc.c
+\file osc.c
 */
 
 #include "osc.h"

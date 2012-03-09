@@ -1,6 +1,6 @@
 /**
-@file midi.c
-@brief
+\file midi.c
+\brief
 */
 
 #include "midi.h"
