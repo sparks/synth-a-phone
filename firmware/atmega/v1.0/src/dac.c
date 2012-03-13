@@ -1,6 +1,6 @@
 /**
 \file dac.c
-\brief
+\brief Provides access to output value to the serial and parallel DAC.
 */
 
 #include "dac.h"
@@ -10,18 +10,28 @@
 #include <avr/interrupt.h>
 #include <util/delay.h>
 
+/** Pin for the serial DAC. */
 #define SERIAL_DAC_SCK PB5
+/** Pin for the serial DAC. */
 #define SERIAL_DAC_DIN PB3
+/** Pin for the serial DAC. */
 #define SERIAL_DAC_CS PB2
+/** Pin for the serial DAC. */
 #define SERIAL_DAC_LDAC PB1
 
+/** Serial DAC configuration byte. */
 #define SERIAL_DAC_CONF 0x30
 
+/** Pin for the parallel DAC. */
 #define PAR_DAC_WR PD2
+/** Pin for the parallel DAC. */
 #define PAR_DAC_AB PD3
+/** Pin for the parallel DAC. */
 #define PAR_DAC_NIBBLE_LOW PC0
+/** Pin for the parallel DAC. */
 #define PAR_DAC_NIBBLE_HIGH PD4
 
+/** States of the DAC. */
 typedef enum {
 	IDLE,
 	FIRST_BYTE,
@@ -109,6 +119,10 @@ uint8_t is_lossy(void) {
 	return lossy_flag;
 }
 
+/**
+ * Handle the SPI transmission complete interrupt.
+ *
+*/
 ISR(SPI_STC_vect) {
 	if(ser_dac_state == FIRST_BYTE) {
 		ser_dac_state = SECOND_BYTE;
