@@ -1,7 +1,10 @@
+# Makin' waves, yo.
+
 import math
 import argparse
 import matplotlib.pyplot as plot
 
+# Parse dem args.
 parser = argparse.ArgumentParser(description='Generate wave tables for sine, triangle, sawtooth, and square waves, given the inputs specified.')
 parser.add_argument('-l', '--length', action='store', dest='len', type=int, help='length of the wave table.')
 parser.add_argument('-a', '--amplitude', action='store', dest='amp', type=int, help='amplitude of the output waves.')
@@ -15,6 +18,7 @@ amp = args.amp
 oct = args.oct
 samp = args.samp
 
+# Setup dat sampling.
 freq = samp / len
 
 wave_period = 1 / freq
@@ -25,6 +29,7 @@ octaves = []
 for i in range(oct):
 	octaves.append(math.pow(2, i))
 
+# Generate dem wavetables.
 sine = []
 triangle = []
 sawtooth = []
@@ -39,8 +44,34 @@ for j in range(oct):
 		sine[j].append(amp * math.sin(octaves[j] * i * (samp_period / wave_period) * 2 * math.pi))
 		triangle[j].append(4 * amp * (samp_period / wave_period) * -math.fabs(((octaves[j] * i) % (wave_period / samp_period)) - (wave_period / (2 * samp_period))) + amp)
 		sawtooth[j].append((2 * amp * octaves[j] * i * (samp_period / wave_period) % (2 * amp)) - amp)
-		square[j].append(amp if (((octaves[j] * i) % (wave_period / samp_period)) < (wave_period / (2 * samp_period))) else -amp) 
+		square[j].append(amp if (((octaves[j] * i) % (wave_period / samp_period)) < (wave_period / (2 * samp_period))) else -amp)
+		
+# Write dat file.
+f = open('wavetable.txt', 'w')
 
+f.write('\n// Sine waves:\n')
+for i in range(oct):
+	f.write(str(sine[i]))
+	f.write('\n')
+	
+f.write('\n// Triangle waves:\n')
+for i in range(oct):
+	f.write(str(triangle[i]))
+	f.write('\n')
+
+f.write('\n// Sawtooth waves:\n')
+for i in range(oct):
+	f.write(str(sawtooth[i]))
+	f.write('\n')
+
+f.write('\n// Square waves:\n')
+for i in range(oct):
+	f.write(str(square[i]))
+	f.write('\n')
+
+f.write('\n')
+f.close()
+		
 # If generating at least 4 octaves, you can uncomment everything below to visualize the wavetables as a plot
 
 # plot.subplot(4, 4, 1)
