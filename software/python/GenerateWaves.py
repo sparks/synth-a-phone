@@ -41,32 +41,32 @@ for j in range(oct):
 	sawtooth.append([])
 	square.append([])
 	for i in range(len):
-		sine[j].append(amp * math.sin(octaves[j] * i * (samp_period / wave_period) * 2 * math.pi))
-		triangle[j].append(4 * amp * (samp_period / wave_period) * -math.fabs(((octaves[j] * i) % (wave_period / samp_period)) - (wave_period / (2 * samp_period))) + amp)
-		sawtooth[j].append((2 * amp * octaves[j] * i * (samp_period / wave_period) % (2 * amp)) - amp)
-		square[j].append(amp if (((octaves[j] * i) % (wave_period / samp_period)) < (wave_period / (2 * samp_period))) else -amp)
-		
+		sine[j].append(int(round(amp * math.sin(octaves[j] * i * (samp_period / wave_period) * 2 * math.pi))))
+		triangle[j].append(int(round(4 * amp * (samp_period / wave_period) * -math.fabs(((octaves[j] * i) % (wave_period / samp_period)) - (wave_period / (2 * samp_period))) + amp)))
+		sawtooth[j].append(int(round((2 * amp * octaves[j] * i * (samp_period / wave_period) % (2 * amp)) - amp)))
+		square[j].append(int(round(amp if (((octaves[j] * i) % (wave_period / samp_period)) < (wave_period / (2 * samp_period))) else -amp)))
+
 # Write dat file.
 f = open('wavetable.txt', 'w')
 
 f.write('\n// Sine waves:\n')
 for i in range(oct):
-	f.write(str(sine[i]))
+	f.write('{' + str.strip(str(sine[i]), '[]') + '}')
 	f.write('\n')
 	
 f.write('\n// Triangle waves:\n')
 for i in range(oct):
-	f.write(str(triangle[i]))
+	f.write('{' + str.strip(str(triangle[i]), '[]') + '}')
 	f.write('\n')
 
 f.write('\n// Sawtooth waves:\n')
 for i in range(oct):
-	f.write(str(sawtooth[i]))
+	f.write('{' + str.strip(str(sawtooth[i]), '[]') + '}')
 	f.write('\n')
 
 f.write('\n// Square waves:\n')
 for i in range(oct):
-	f.write(str(square[i]))
+	f.write('{' + str.strip(str(square[i]), '[]') + '}')
 	f.write('\n')
 
 f.write('\n')
