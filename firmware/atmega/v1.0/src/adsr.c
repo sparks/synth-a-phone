@@ -8,7 +8,7 @@
 uint8_t times[5] = {0, 5, 20, 5, 30};
 uint8_t levels[5] = {0, 200, 170, 170, 0};
 
-uint8_t gate = 0;
+uint8_t gate_val = 0;
 uint8_t cur_time = 0xFF;
 
 void adsr_init(void) {
@@ -21,8 +21,8 @@ void adsr_init(void) {
 }
 
 void gate(uint8_t new_gate) {
-	if(new_gate > 0 && gate == 0) cur_time = 0;
-	gate = new_gate;
+	if(new_gate > 0 && gate_val == 0) cur_time = 0;
+	gate_val = new_gate;
 }
 
 uint8_t compute_adsr(void) {
@@ -40,7 +40,7 @@ uint8_t compute_adsr(void) {
 				break;
 			}
 		}
-		if((gate > 0 && cur_time < times[3]) || gate == 0) cur_time++; //If we haven't reached the sustain point, or if we've released, keep incrementing index
+		if((gate_val > 0 && cur_time < times[3]) || gate_val == 0) cur_time++; //If we haven't reached the sustain point, or if we've released, keep incrementing index
 		return value;
 	}
 }

@@ -102,21 +102,21 @@ void hf_sample(void) {
  *
 */
 void lf_sample(void) {
-	env = adsr_value();
+	env = compute_adsr();
 	
 	if (USING_KEYS) {
 	
-		get_delta(freq);
-		uint8_t detune[3];
-		detune[0] = adc_val(0) >> 2;
-		detune[1] = adc_val(2) >> 2;
-		detune[2] = 0;
+		// get_delta(freq);
+		// uint8_t detune[3];
+		// detune[0] = adc_val(0) >> 2;
+		// detune[1] = adc_val(2) >> 2;
+		// detune[2] = 0;
 		
-		asm volatile(	"add %0, %3" "\n\t"
-				"adc %1, %4" "\n\t"
-				"adc %2, %5" "\n\t" :
-			"+r" (freq[0]), "+r" (freq[1]), "+r" (freq[2]),
-			"+r" (detune[0]), "+r" (detune[1]), "+r" (detune[2]));
+		// asm volatile(	"add %0, %3" "\n\t"
+		// 		"adc %1, %4" "\n\t"
+		// 		"adc %2, %5" "\n\t" :
+		// 	"+r" (freq[0]), "+r" (freq[1]), "+r" (freq[2]),
+		// 	"+r" (detune[0]), "+r" (detune[1]), "+r" (detune[2]));
 			
 	} else {
 		
