@@ -1,6 +1,6 @@
 /**
 \file osc.h
-\brief
+\brief Contains all the wavegeneration/oscillator code
 */
 
 #ifndef SYNTH_OSCILLATORS
@@ -8,22 +8,7 @@
 
 #include <avr/io.h>
 
-void sine_init(void);
-
-int16_t sawtooth(uint16_t freq);
-int16_t triangle(uint16_t freq);
-int16_t pulse(uint16_t freq);
-int16_t sine(uint16_t freq);
-
-//typedef for wave table index
-typedef union {
-	uint32_t int32;
-	uint8_t array[4];
-} audio_index_t;
-
-int16_t sine_uint24(audio_index_t freq);
-
-// 24bit addition macro 
+/** 24bit addition macro */
 #define add_audio_index(a, b) \
 	__asm__ __volatile__( \
 			"add %0, %3" "\n\t" \
@@ -33,3 +18,48 @@ int16_t sine_uint24(audio_index_t freq);
 			"+r" (b.array[0]), "+r" (b.array[1]), "+r" (b.array[2]) \
 	)
 #endif
+
+/** typedef for wave table index */
+typedef union {
+	uint32_t int32;
+	uint8_t array[4];
+} audio_index_t;
+
+/**
+ * Initialises various variables and tables for the oscillators.
+ *
+*/
+void osc_init(void);
+
+/**
+ * Returns a exact sawtooth wave, not bandlimited, computed on the fly.
+ *
+ * \param freq the frequency increment.
+ * \return the next wave value.
+*/
+int16_t sawtooth(uint16_t freq);
+
+/**
+ * Returns a exact triangle, not bandlimited, computed on the fly.
+ *
+ * \param freq the frequency increment.
+ * \return the next wave value.
+*/
+int16_t triangle(uint16_t freq);
+
+/**
+ * Returns a exact 50/50 duty cycle pulse, not bandlimited, computed on the fly.
+ *
+ * \param freq the frequency increment.
+ * \return the next wave value.
+*/
+int16_t pulse(uint16_t freq);
+
+/**
+ * Takes as input 24 bit (8x3 array) freq (period) encoded inside a 32bit int using the audio_index_t type.
+ * ramp_sin is incremented by freq and the last byte is used in the look up table to get the sine value.
+ *
+ * \param freq the frequency increment.
+ * \return the next wave value.
+*/
+int16_t sine_uint24(audio_index_t freq);

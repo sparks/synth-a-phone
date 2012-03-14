@@ -1,30 +1,37 @@
 /**
 \file osc.c
+\brief Contains all the wavegeneration/oscillator code
 */
 
 #include "osc.h"
-#include <string.h>
 #include "uart.h"
+
+#include <string.h>
 #include <math.h>
 
+/** The default wavetable length */
 #define WAVETABLE_WIDTH 256
+/** Mmmm pie */
 #define PI 3.14159265
 
-uint8_t direction = 0;
 
-int16_t ramp_saw = 0;
-int16_t ramp_tri = 0;
+int16_t saw_ramp = 0;
 
-int16_t squ_value = 0;
-uint16_t ramp_squ = 0;
-audio_index_t ramp_sin;
+uint8_t tri_direction = 0;
+int16_t tri_ramp = 0;
+
+int16_t pulse_value = 0;
+uint16_t pulse_ramp = 0;
 
 int16_t sine_lookup[WAVETABLE_WIDTH];
+audio_index_t ramp_sin;
 
-void sine_init(void) {
+void osc_init(void) {
 	int i;
+	
 	//init ramp_sin
 	ramp_sin.int32 = 0;
+
 	for (i = 0; i < WAVETABLE_WIDTH; i++) {
 		// creates a lookup table of one wavelength of sine of WAVETABLE_WIDTH
 		// multiplied by the halfwidth of the 12bit dac
@@ -33,40 +40,38 @@ void sine_init(void) {
 }
 
 int16_t sawtooth(uint16_t freq) {
-	ramp_saw += freq;
-	if(ramp_saw > 2047) ramp_saw = -2048;
+	saw_ramp += freq;
+	if(saw_ramp > 2047) saw_ramp = -2048;
 
-	return ramp_saw;
+	return saw_ramp;
 }
 
 int16_t triangle(uint16_t freq) {
-	if(direction == 0) ramp_tri += freq << 1;
-	else ramp_tri -= freq << 1;
+	if(tri_direction == 0) tri_ramp += freq << 1;
+	else tri_ramp -= freq << 1;
 
-	if(ramp_tri >= 2047 || ramp_tri <= -2048) {
-		if(direction == 0) ramp_tri = 2047;
-		else ramp_tri = -2048;
-		direction = (direction + 1) % 2;
+	if(tri_ramp >= 2047 || tri_ramp <= -2048) {
+		if(tri_direction == 0) tri_ramp = 2047;
+		else tri_ramp = -2048;
+		tri_direction = (tri_direction + 1) % 2;
 	}
 
-	return ramp_tri;
+	return tri_ramp;
 }
 
 int16_t pulse(uint16_t freq) {
-	ramp_squ += freq;
+	pulse_ramp += freq;
 
-	if(ramp_squ >= 0xFFF) {
-		if(squ_value == -2048) squ_value = 2047;
-		else squ_value = -2048;
-		ramp_squ = 0;
+	if(pulse_ramp >= 0xFFF) {
+		if(pulse_value == -2048) pulse_value = 2047;
+		else pulse_value = -2048;
+		pulse_ramp = 0;
 	}
 
-	return squ_value;
+	return pulse_value;
 }
 
-// takes as input 24 bit (8x3 array) freq (period)
-// ramp_sin_24 is incremented by freq and the last byte is used in the look up table to get the sine value
-int16_t sine_uint24(audio_index_t freq) {
+int16_t sine(audio_index_t freq) {
 	add_audio_index(ramp_sin, freq);
 
 	return sine_lookup[ramp_sin.array[2]];	

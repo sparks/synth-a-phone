@@ -43,7 +43,7 @@ int main(void) {
 	uart_init(&uart_callback);
 	
 	//init sine
-	sine_init();
+	osc_init();
 
 	timer_init(&hf_sample, &lf_sample); //This should be last, since timer callback will start occuring after this
 	sei();
