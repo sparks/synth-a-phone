@@ -29,6 +29,8 @@ int16_t hif_output = 0;
 uint8_t env = 0;
 uint8_t freq[3] = {0, 0, 1};
 
+audio_index test;
+
 int main(void) {
 
 	adc_init();
@@ -38,6 +40,7 @@ int main(void) {
 	
 	//init sine
 	sine_init();
+	test.int32 = 0;
 	sei();
 
 	for(;;) {
@@ -45,7 +48,7 @@ int main(void) {
 			hif_output = 0;
 			
 			if (USING_KEYS) {
-			
+				/*
 				if(adc_val(1) < 350) {
 					hif_output += ((sine_uint24(freq)>>4)*env)>>4;
 				} else if(adc_val(1) < 700) {
@@ -53,16 +56,18 @@ int main(void) {
 				} else {
 					hif_output += ((triangle(freq[2])>>4)*env)>>4;
 				}
+				*/
 				
 			} else {
 				
 				// Stacked wave.
-				hif_output += sine_uint24(freq)>>1;
-				hif_output += triangle(freq[2]<<2)>>1;
+				hif_output += sine_uint24(test); //>>1;
+				//hif_output += triangle(freq[2]<<2)>>1;
 			
+				/*
 				if (adc_val(0) > 512) {
 					clip(&hif_output);
-				}
+				} */
 			}
 			
 			compute_flag = 0;
@@ -102,10 +107,15 @@ void lf_sample(void) {
 			"+r" (detune[0]), "+r" (detune[1]), "+r" (detune[2]));
 			
 	} else {
-	
-		freq[0] = 0; //adc_val(0) >> 2;
+		
+		freq[0] = adc_val(0) >> 2;
 		freq[1] = adc_val(2) >> 2;
 		freq[2] = adc_val(1) >> 2;	
+		
+
+		test.array[0] = adc_val(0) >> 2;
+		test.array[1] = adc_val(2) >> 2;
+		test.array[2] = adc_val(1) >> 2;
 	}	
 		
 	adc_trigger();

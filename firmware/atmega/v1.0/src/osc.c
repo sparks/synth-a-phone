@@ -3,9 +3,9 @@
 */
 
 #include "osc.h"
-#include <math.h>
 #include <string.h>
 #include "uart.h"
+#include <math.h>
 
 #define WAVETABLE_WIDTH 256
 #define PI 3.14159265
@@ -17,20 +17,18 @@ int16_t ramp_tri = 0;
 
 int16_t squ_value = 0;
 uint16_t ramp_squ = 0;
-uint16_t ramp_sin = 0;
-uint8_t ramp_sin_24[3] = {0,0,0};
-
-uint32_t test_a, test_b, test_c;
+audio_index ramp_sin;
 
 int16_t sine_lookup[WAVETABLE_WIDTH];
 
 void sine_init(void) {
 	int i;
+	//init ramp_sin
+	ramp_sin.int32 = 0;
 	for (i = 0; i < WAVETABLE_WIDTH; i++) {
 		// creates a lookup table of one wavelength of sine of WAVETABLE_WIDTH
-		// first offset by 1 because it's unsigned
 		// multiplied by the halfwidth of the 12bit dac
-		sine_lookup[i] = (int16_t)(2047*(sin(i * 2 * PI / WAVETABLE_WIDTH)));
+		sine_lookup[i] = (int16_t)(2047*(sin((i * 2 * PI) / WAVETABLE_WIDTH)));
 	}
 }
 
@@ -68,21 +66,9 @@ int16_t pulse(uint16_t freq) {
 
 // takes as input 24 bit (8x3 array) freq (period)
 // ramp_sin_24 is incremented by freq and the last byte is used in the look up table to get the sine value
-int16_t sine_uint24(uint8_t* freq) {
-	// some super awesome assembly code to add 24 bit numbers
-	asm volatile(	"add %0, %3" "\n\t"
-			"adc %1, %4" "\n\t"
-			"adc %2, %5" "\n\t" :
-			"+r" (ramp_sin_24[0]), "+r" (ramp_sin_24[1]), "+r" (ramp_sin_24[2]),
-			"+r" (freq[0]), "+r" (freq[1]), "+r" (freq[2]));
+int16_t sine_uint24(audio_index freq) {
+	add_audio_index(ramp_sin, freq);
 
-	return sine_lookup[ramp_sin_24[2]];	
+	return sine_lookup[ramp_sin.array[2]];	
 }
 
-int16_t sine(uint16_t freq) {
-	ramp_sin += freq;
-
-	if (ramp_sin >= WAVETABLE_WIDTH) ramp_sin = 0;
-
-	return sine_lookup[ramp_sin];
-}
