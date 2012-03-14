@@ -9,6 +9,10 @@
 #include <avr/io.h>
 #include "osc.h"
 
+/**
+ * MIDI message status bytes
+ *
+*/
 typedef enum {
 	NoteOff	              = 0x80,	//Note Off
 	NoteOn                = 0x90,	//Note On
@@ -31,6 +35,10 @@ typedef enum {
 	InvalidType           = 0x00    //For notifying errors
 } midi_status_t;
 
+/**
+ * The type for a midi callback function pointer.
+ *
+*/
 typedef void (*midi_callback)(void);
 
 void midi_init(void);
