@@ -120,9 +120,9 @@ void lf_sample(void) {
 			
 	} else {
 		
-		test.array[2] = adc_val(0) >> 4;
-		// test.array[1] = adc_val(2) >> 4;
-		// test.array[0] = adc_val(1) >> 4;
+		test.array[2] = adc_val(0) >> 2;
+		test.array[1] = adc_val(2) >> 2;
+		test.array[0] = adc_val(1) >> 2;
 	}	
 		
 	adc_trigger();

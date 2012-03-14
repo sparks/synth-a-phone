@@ -17,8 +17,6 @@
 uint8_t mux_pointer = ADC_MUX_MIN;
 uint16_t latest_values[ADC_MUX_LEN];
 
-uint8_t adc_lock = 0;
-
 void adc_init(void) {
 	uint8_t i;
 	for(i = 0;i < ADC_MUX_LEN;i++) {
@@ -33,7 +31,7 @@ void adc_init(void) {
 }
 
 void adc_trigger(void) {
-	if(mux_pointer == ADC_MUX_MIN) ADCSRA |= (1 << ADSC); //Trigger first sequence if not already running a cycle
+	if((mux_pointer == ADC_MUX_MIN) && ((ADCSRA & (1 << ADSC)) == 0)) ADCSRA |= (1 << ADSC); //Trigger first sequence if not already running a cycle
 }
 
 uint16_t adc_val(uint8_t mux) {
@@ -46,8 +44,10 @@ uint16_t adc_val(uint8_t mux) {
  *
 */
 ISR(ADC_vect) {
-	latest_values[mux_pointer-ADC_MUX_MIN] = ADCL;
-	latest_values[mux_pointer-ADC_MUX_MIN] |= ADCH << 8;
+	uint16_t new_adc_value = ADCL;
+	new_adc_value |= ADCH << 8;
+
+	latest_values[mux_pointer-ADC_MUX_MIN] = (3*latest_values[mux_pointer-ADC_MUX_MIN] >> 2) + (new_adc_value >> 2);
 
 	ADMUX &= ~(0x0F);
 
