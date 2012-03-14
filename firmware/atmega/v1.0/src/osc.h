@@ -8,6 +8,12 @@
 
 #include <avr/io.h>
 
+/** typedef for wave table index */
+typedef union {
+	uint32_t int32;
+	uint8_t array[4];
+} audio_index_t;
+
 /** 24bit addition macro */
 #define add_audio_index(a, b) \
 	__asm__ __volatile__( \
@@ -18,12 +24,6 @@
 			"+r" (b.array[0]), "+r" (b.array[1]), "+r" (b.array[2]) \
 	)
 #endif
-
-/** typedef for wave table index */
-typedef union {
-	uint32_t int32;
-	uint8_t array[4];
-} audio_index_t;
 
 /**
  * Initialises various variables and tables for the oscillators.
@@ -62,4 +62,4 @@ int16_t pulse(uint16_t freq);
  * \param freq the frequency increment.
  * \return the next wave value.
 */
-int16_t sine_uint24(audio_index_t freq);
+int16_t sine(audio_index_t freq);

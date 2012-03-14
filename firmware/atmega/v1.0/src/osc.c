@@ -6,7 +6,6 @@
 #include "osc.h"
 #include "uart.h"
 
-#include <string.h>
 #include <math.h>
 
 /** The default wavetable length */
