@@ -8,6 +8,7 @@
 
 #include <avr/io.h>
 
+/** Error code returned if you request an ADC value which is out of bounds. */
 #define ADC_ERROR_CODE 0xFFFF
 
 /**

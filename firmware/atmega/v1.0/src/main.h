@@ -1,6 +1,6 @@
 /**
 \file main.h
-\brief
+\brief main process for the synth project.
 */
 
 #ifndef SYNTH_MAIN

@@ -1,6 +1,6 @@
 /**
 \file main.c
-\brief
+\brief main process for the synth project.
 */
 
 #include "main.h"
@@ -27,20 +27,24 @@ volatile uint8_t too_slow_flag = 0;
 volatile uint8_t compute_flag = 0;
 int16_t hif_output = 0;
 uint8_t env = 0;
-uint8_t freq[3] = {0, 0, 1};
-
 audio_index test;
 
+/**
+ * Main function
+ *
+ * \return the exit code of the program (don't care).
+*/
 int main(void) {
 
 	adc_init();
 	dac_init();
-	timer_init(&hf_sample, &lf_sample);
+	adsr_init();
 	uart_init(&uart_callback);
 	
 	//init sine
 	sine_init();
-	test.int32 = 0;
+
+	timer_init(&hf_sample, &lf_sample); //This should be last, since timer callback will start occuring after this
 	sei();
 
 	for(;;) {
@@ -77,6 +81,10 @@ int main(void) {
 	return 0;
 }
 
+/**
+ * Call back for the high frequency timer, used for audio sampling rate.
+ *
+*/
 void hf_sample(void) {
 	if(compute_flag == 0) {
 		// if(!too_slow_flag) {
@@ -89,6 +97,10 @@ void hf_sample(void) {
 	}
 }
 
+/**
+ * Call back for the low frequency timer, used for envelope sampling rate, LFOs, ADCs and other slow buisness.
+ *
+*/
 void lf_sample(void) {
 	env = adsr_value();
 	
@@ -108,11 +120,6 @@ void lf_sample(void) {
 			
 	} else {
 		
-		freq[0] = adc_val(0) >> 2;
-		freq[1] = adc_val(2) >> 2;
-		freq[2] = adc_val(1) >> 2;	
-		
-
 		test.array[0] = adc_val(0) >> 2;
 		test.array[1] = adc_val(2) >> 2;
 		test.array[2] = adc_val(1) >> 2;

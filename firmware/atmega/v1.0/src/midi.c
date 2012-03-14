@@ -47,15 +47,15 @@ void uart_callback(void) {
 					pitch = midi_msg[1];
 					velocity = midi_msg[2];
 					pitch_change();
-					trig_gate(0);
-					trig_gate(1);
+					gate(0);
+					gate(1);
 					break;
 				}
 
 			case NoteOff:
 				if(pitch == midi_msg[1]) {
 					velocity = 0;
-					trig_gate(0);
+					gate(0);
 				}
 				break;
 			default:
