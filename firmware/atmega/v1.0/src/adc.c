@@ -47,9 +47,13 @@ ISR(ADC_vect) {
 	uint16_t new_adc_value = ADCL;
 	new_adc_value |= ADCH << 8;
 
-	latest_values[mux_pointer-ADC_MUX_MIN] = (3*latest_values[mux_pointer-ADC_MUX_MIN] >> 2) + (new_adc_value >> 2);
+	new_adc_value = (3*latest_values[mux_pointer-ADC_MUX_MIN] >> 2) + (new_adc_value >> 2); //Simple low pass
 
-	ADMUX &= ~(0x0F);
+	//Min difference before changing values prevents oscillation
+	int8_t adc_diff = new_adc_value-latest_values[mux_pointer-ADC_MUX_MIN];
+	if(adc_diff > 1 || adc_diff < -1) latest_values[mux_pointer-ADC_MUX_MIN] = new_adc_value;
+
+	ADMUX &= ~(0x0F); //Clear the MUX
 
 	if(++mux_pointer >= ADC_MUX_MAX) {
 		ADMUX |= ADC_MUX_MIN;

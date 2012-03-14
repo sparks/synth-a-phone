@@ -16,8 +16,7 @@ int16_t pulse(uint16_t freq);
 int16_t sine(uint16_t freq);
 
 //typedef for wave table index
-typedef union
-{
+typedef union {
 	uint32_t int32;
 	uint8_t array[4];
 } audio_index_t;
