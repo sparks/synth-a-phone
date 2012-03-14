@@ -17,7 +17,7 @@ int16_t ramp_tri = 0;
 
 int16_t squ_value = 0;
 uint16_t ramp_squ = 0;
-audio_index ramp_sin;
+audio_index_t ramp_sin;
 
 int16_t sine_lookup[WAVETABLE_WIDTH];
 
@@ -66,7 +66,7 @@ int16_t pulse(uint16_t freq) {
 
 // takes as input 24 bit (8x3 array) freq (period)
 // ramp_sin_24 is incremented by freq and the last byte is used in the look up table to get the sine value
-int16_t sine_uint24(audio_index freq) {
+int16_t sine_uint24(audio_index_t freq) {
 	add_audio_index(ramp_sin, freq);
 
 	return sine_lookup[ramp_sin.array[2]];	

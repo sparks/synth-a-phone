@@ -27,7 +27,7 @@ volatile uint8_t too_slow_flag = 0;
 volatile uint8_t compute_flag = 0;
 int16_t hif_output = 0;
 uint8_t env = 0;
-audio_index test;
+audio_index_t test;
 
 /**
  * Main function
@@ -120,9 +120,9 @@ void lf_sample(void) {
 			
 	} else {
 		
-		test.array[0] = adc_val(0) >> 2;
-		test.array[1] = adc_val(2) >> 2;
-		test.array[2] = adc_val(1) >> 2;
+		test.array[2] = adc_val(0) >> 4;
+		// test.array[1] = adc_val(2) >> 4;
+		// test.array[0] = adc_val(1) >> 4;
 	}	
 		
 	adc_trigger();

@@ -20,9 +20,9 @@ typedef union
 {
 	uint32_t int32;
 	uint8_t array[4];
-}audio_index;
+} audio_index_t;
 
-int16_t sine_uint24(audio_index freq);
+int16_t sine_uint24(audio_index_t freq);
 
 // 24bit addition macro 
 #define add_audio_index(a, b) \

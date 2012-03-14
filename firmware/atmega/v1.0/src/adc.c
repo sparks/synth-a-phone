@@ -17,6 +17,8 @@
 uint8_t mux_pointer = ADC_MUX_MIN;
 uint16_t latest_values[ADC_MUX_LEN];
 
+uint8_t adc_lock = 0;
+
 void adc_init(void) {
 	uint8_t i;
 	for(i = 0;i < ADC_MUX_LEN;i++) {
@@ -47,11 +49,14 @@ ISR(ADC_vect) {
 	latest_values[mux_pointer-ADC_MUX_MIN] = ADCL;
 	latest_values[mux_pointer-ADC_MUX_MIN] |= ADCH << 8;
 
-	if(++mux_pointer >= ADC_MUX_MAX) mux_pointer = ADC_MUX_MIN;
-
 	ADMUX &= ~(0x0F);
-	ADMUX |= mux_pointer;
 
-	if(mux_pointer != ADC_MUX_MIN) ADCSRA |= (1 << ADSC); //Keep triggering through all ADC channels (ALWAYS LAST IN INTERRUPT)
+	if(++mux_pointer >= ADC_MUX_MAX) {
+		ADMUX |= ADC_MUX_MIN;
+		mux_pointer = ADC_MUX_MIN;
+	} else {
+		ADMUX |= mux_pointer;
+		ADCSRA |= (1 << ADSC); //Keep triggering through all ADC channels (ALWAYS LAST IN INTERRUPT)
+	}
 }
 
