@@ -16,7 +16,7 @@
 #define TIMER_HF_PERIOD	F_CPU/8/TIMER_HF_FREQ
 
 /** The frequency of the LF timer. Range ~ [39HZ-2.5MHz] */
-#define TIMER_LF_FREQ 50
+#define TIMER_LF_FREQ 300
 /** The resulting low frequency timer period. */
 #define TIMER_LF_PERIOD F_CPU/8/TIMER_LF_FREQ
 

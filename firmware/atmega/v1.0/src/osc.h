@@ -10,11 +10,12 @@
 
 /** typedef for wave table index */
 typedef union {
-	uint32_t int32;
+	uint32_t uint32_t;
 	uint8_t array[4];
 } audio_index_t;
 
-/** 24bit addition macro */
+//THIS MACRO MUST BE AFTER THE TYPEDEF OR YOU GET INCOMPREHENSIBLE COMPILER ERRORS
+/** 24bit addition macro */ 
 #define add_audio_index(a, b) \
 	__asm__ __volatile__( \
 			"add %0, %3" "\n\t" \
@@ -32,7 +33,7 @@ typedef union {
 void osc_init(void);
 
 /**
- * Returns a exact sawtooth wave, not bandlimited, computed on the fly.
+ * Returns a exact sawtooth wave, not band limited, computed on the fly.
  *
  * \param freq the frequency increment.
  * \return the next wave value.
@@ -40,7 +41,7 @@ void osc_init(void);
 int16_t sawtooth(uint16_t freq);
 
 /**
- * Returns a exact triangle, not bandlimited, computed on the fly.
+ * Returns a exact triangle, not band limited, computed on the fly.
  *
  * \param freq the frequency increment.
  * \return the next wave value.
@@ -48,7 +49,7 @@ int16_t sawtooth(uint16_t freq);
 int16_t triangle(uint16_t freq);
 
 /**
- * Returns a exact 50/50 duty cycle pulse, not bandlimited, computed on the fly.
+ * Returns a exact 50/50 duty cycle pulse, not band limited, computed on the fly.
  *
  * \param freq the frequency increment.
  * \return the next wave value.

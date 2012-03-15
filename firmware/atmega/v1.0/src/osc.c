@@ -29,7 +29,7 @@ void osc_init(void) {
 	int i;
 	
 	//init ramp_sin
-	ramp_sin.int32 = 0;
+	ramp_sin.uint32_t = 0;
 
 	for (i = 0; i < WAVETABLE_WIDTH; i++) {
 		// creates a lookup table of one wavelength of sine of WAVETABLE_WIDTH

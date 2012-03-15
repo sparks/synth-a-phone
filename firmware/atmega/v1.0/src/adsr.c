@@ -12,11 +12,9 @@ uint8_t gate_val = 0;
 uint8_t cur_time = 0xFF;
 
 void adsr_init(void) {
-	uint8_t i, j;
-	for(i = 0;i < 5;i++) {
-		for(j = 0;j < i;j++) {
-			times[i] += times[j];
-		}
+	uint8_t i;
+	for(i = 1;i < 5;i++) {
+		times[i] += times[i-1];
 	}
 }
 
