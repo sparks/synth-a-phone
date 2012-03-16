@@ -29,6 +29,8 @@ int16_t tri_ramp = 0;
 int16_t pulse_value = 0;
 uint16_t pulse_ramp = 0;
 
+int16_t val1, val2;
+
 audio_index_t ramp_sin;
 
 void osc_init(void) {
@@ -80,7 +82,10 @@ int16_t sine(audio_index_t freq) {
 	add_audio_index(ramp_sin, freq);
 
 	#if WAVETABLE_WIDTH == 4096
-		return pgm_read_word(&(sine_lookup[ramp_sin.uint32_t >> 12]));
+		val1 = pgm_read_word(&(sine_lookup[ramp_sin.uint32_t >> 12]));
+		val2 = pgm_read_word(&(sine_lookup[(ramp_sin.uint32_t+1) >> 12]));
+		
+		return val1+(((ramp_sin.uint32_t - (ramp_sin.uint32_t & 0xFFFFF000))*(val1 - val2)) >> 12);
 	
 	// placeholder for other possible tables
 	#endif
