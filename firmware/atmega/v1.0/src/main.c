@@ -109,9 +109,19 @@ void lf_sample(void) {
 		detune.array[0] = (adc_val(2) >> 2) & 0xFF;
 		add_audio_index(freq, detune);
 	#else
-		freq.array[2] = adc_val(0) >> 2;
-		freq.array[1] = adc_val(2) >> 2;
-		freq.array[0] = adc_val(1) >> 2;
+		//here I was messing around with making the middle freq easier to tune
+		//by giving the middle pot a bigger range
+		//otherwis ethe top pot is too touchy, IMHO
+		/*if(adc_val(3) > 256) {
+			// top 4 bits and bottom 4 bits
+			freq.array[2] = ((adc_val(0) >> 2) & 0xF0) | (adc_val(2) >> 6);
+			freq.array[1] = ((adc_val(2) << 4) & 0xFD) | (adc_val(1) >> 8);
+			freq.array[0] = adc_val(1);
+		} else {*/
+			freq.array[2] = adc_val(0) >> 2;
+			freq.array[1] = adc_val(2) >> 2;
+			freq.array[0] = adc_val(1) >> 2;
+		//}	
 	#endif
 
 	adc_trigger();
@@ -127,3 +137,4 @@ void lf_sample(void) {
 int16_t apply_env(uint8_t env, int16_t value) {
 	return ((value >> 4)*env) >> 4;
 }
+
