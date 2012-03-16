@@ -29,8 +29,6 @@ int16_t tri_ramp = 0;
 int16_t pulse_value = 0;
 uint16_t pulse_ramp = 0;
 
-int16_t val1, val2;
-
 audio_index_t ramp_sin;
 
 void osc_init(void) {
@@ -79,13 +77,22 @@ int16_t pulse(uint16_t freq) {
 }
 
 int16_t sine(audio_index_t freq) {
+	int16_t val1, val2;
+	uint32_t index;
+
 	add_audio_index(ramp_sin, freq);
 
 	#if WAVETABLE_WIDTH == 4096
-		val1 = pgm_read_word(&(sine_lookup[ramp_sin.uint32_t >> 12]));
-		val2 = pgm_read_word(&(sine_lookup[(ramp_sin.uint32_t+1) >> 12]));
-		
-		return val1+(((ramp_sin.uint32_t - (ramp_sin.uint32_t & 0xFFFFF000))*(val1 - val2)) >> 12);
+		//now with linear interpolation!
+		index = ramp_sin.uint32_t >> 12;
+		val1 = pgm_read_word(&(sine_lookup[index]));
+
+		if(index == 0xFFF) index = 0;
+		else index++;
+
+		val2 = pgm_read_word(&(sine_lookup[index]));
+	
+		return val1+((((signed)(ramp_sin.uint32_t - (ramp_sin.uint32_t & 0xFFF000)))*(val1 - val2))/4096);	//div instead of shift to guarantee arithmetic shift
 	
 	// placeholder for other possible tables
 	#endif
