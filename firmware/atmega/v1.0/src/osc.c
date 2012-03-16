@@ -9,12 +9,15 @@
 #include <math.h>
 #include <avr/pgmspace.h>
 
-/** The default wavetable length */
-#define WAVETABLE_WIDTH 4096 
+/** The wavetable length */
+#define WAVETABLE_WIDTH 8192 
 
-#if WAVETABLE_WIDTH == 4096
-#include "wavetable_sin4096.h"
-// placeholder for other possible tables
+#if WAVETABLE_WIDTH == 2048
+	#include "wavetable_sin2048.h"
+#elif WAVETABLE_WIDTH == 4096
+	#include "wavetable_sin4096.h"
+#elif WAVETABLE_WIDTH == 8192
+	#include "wavetable_sin8192.h"
 #endif
  
 /** Mmmm pie */
@@ -82,8 +85,18 @@ int16_t sine(audio_index_t freq) {
 
 	add_audio_index(ramp_sin, freq);
 
-	#if WAVETABLE_WIDTH == 4096
-		//now with linear interpolation!
+	#if WAVETABLE_WIDTH == 2048
+		index = ramp_sin.uint32_t >> 13;
+		val1 = pgm_read_word(&(sine_lookup[index]));
+
+		if(index == 0x7FF) index = 0;
+		else index++;
+
+		val2 = pgm_read_word(&(sine_lookup[index]));
+	
+		return val1+((((signed)(ramp_sin.uint32_t - (ramp_sin.uint32_t & 0x3FF800)))*(val1 - val2))/WAVETABLE_WIDTH);	//div instead of shift to guarantee arithmetic shift
+
+	#elif WAVETABLE_WIDTH == 4096
 		index = ramp_sin.uint32_t >> 12;
 		val1 = pgm_read_word(&(sine_lookup[index]));
 
@@ -92,9 +105,19 @@ int16_t sine(audio_index_t freq) {
 
 		val2 = pgm_read_word(&(sine_lookup[index]));
 	
-		return val1+((((signed)(ramp_sin.uint32_t - (ramp_sin.uint32_t & 0xFFF000)))*(val1 - val2))/4096);	//div instead of shift to guarantee arithmetic shift
+		return val1+((((signed)(ramp_sin.uint32_t - (ramp_sin.uint32_t & 0xFFF000)))*(val1 - val2))/WAVETABLE_WIDTH);	//div instead of shift to guarantee arithmetic shift
+
+	#elif WAVETABLE_WIDTH == 8192
+		index = ramp_sin.uint32_t >> 11;
+		val1 = pgm_read_word(&(sine_lookup[index]));
+
+		if(index == 0x1FFF) index = 0;
+		else index++;
+
+		val2 = pgm_read_word(&(sine_lookup[index]));
 	
-	// placeholder for other possible tables
+		return val1+((((signed)(ramp_sin.uint32_t - (ramp_sin.uint32_t & 0x1FFF000)))*(val1 - val2))/WAVETABLE_WIDTH);	//div instead of shift to guarantee arithmetic shift
+		
 	#endif
 }
 

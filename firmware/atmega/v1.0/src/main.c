@@ -44,7 +44,7 @@ int main(void) {
 	
 	midi_init();
 	osc_init();
-
+	
 	timer_init(&hf_sample, &lf_sample); //This should be last, since timer callback will start occuring after this
 	sei();
 
@@ -121,7 +121,14 @@ void lf_sample(void) {
 			freq.array[2] = adc_val(0) >> 2;
 			freq.array[1] = adc_val(2) >> 2;
 			freq.array[0] = adc_val(1) >> 2;
-		//}	
+
+			if(freq.uint32_t > 0xA3D000) freq.uint32_t = 0xA3D000; //max freq
+			else if(freq.uint32_t < 0x2000) freq.uint32_t = 0x2000; //min freq
+		//}
+
+		//set freq range from 0x2000 to 0xA3D000
+		//freq.uint32_t = 0x2000 + (uint32_t)adc_val(1) + (uint32_t)(adc_val(2) << 10) + (uint32_t)(adc_val(0) << 20);
+		//if(freq.uint32_t > 0xA3D000) freq.uint32_t = 0xA3D000;
 	#endif
 
 	adc_trigger();
