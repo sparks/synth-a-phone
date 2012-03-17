@@ -94,15 +94,15 @@ int16_t pulse(uint16_t freq) {
 	return pulse_value;
 }
 
-int16_t sine(audio_index_t freq) {
+int16_t sine(audio_index_t *ramp, audio_index_t freq) {
 	int16_t val1, val2;
 	uint32_t index;
 
-	add_audio_index(ramp_sin, freq);
+	add_audio_index((*ramp), freq);
 
 	// linear interpolation:
 	// F(x) = F(x1) + (x - x1) * (F(x2) - F(x1)/(x2 - x1)
-	index = ramp_sin.uint32_t >> INDEX_SHIFT;
+	index = (*ramp).uint32_t >> INDEX_SHIFT;
 	val1 = pgm_read_word(&(sine_lookup[index]));
 
 	if(index == INDEX_MAX) index = 0;
@@ -110,7 +110,7 @@ int16_t sine(audio_index_t freq) {
 
 	val2 = pgm_read_word(&(sine_lookup[index]));
 
-	return val1+((((signed)(ramp_sin.uint32_t - (ramp_sin.uint32_t & INDEX_MASK)))*(val2 - val1))/WAVETABLE_WIDTH);	//div instead of shift to guarantee arithmetic shift
+	return val1+((((signed)((*ramp).uint32_t - ((*ramp).uint32_t & INDEX_MASK)))*(val2 - val1))/WAVETABLE_WIDTH);	//div instead of shift to guarantee arithmetic shift
 		
 }
 

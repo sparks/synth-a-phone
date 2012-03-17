@@ -27,7 +27,7 @@ int16_t apply_env(uint8_t env, int16_t value);
 volatile uint8_t too_slow_flag = 0;
 volatile int8_t compute_flag = 0;
 
-audio_index_t freq;
+audio_index_t freq[3];
 int16_t hif_output = 0;
 uint8_t env = 255;
 
@@ -44,6 +44,10 @@ int main(void) {
 	
 	midi_init();
 	osc_init();
+
+	//initialize sines
+	audio_index_t sine1, sine2;
+	sine1.uint32_t = sine2.uint32_t = 0x0;
 	
 	timer_init(&hf_sample, &lf_sample); //This should be last, since timer callback will start occuring after this
 	sei();
@@ -62,7 +66,7 @@ int main(void) {
 				}
 			#else
 				//Just a sine
-				hif_output += sine(freq);
+				hif_output += sine(&sine1, freq[0]);
 
 				// Stacked wave.
 				//hif_output += triangle(freq[2]<<2)>>1;
@@ -109,26 +113,22 @@ void lf_sample(void) {
 		detune.array[0] = (adc_val(2) >> 2) & 0xFF;
 		add_audio_index(freq, detune);
 	#else
-		//here I was messing around with making the middle freq easier to tune
-		//by giving the middle pot a bigger range
-		//otherwis ethe top pot is too touchy, IMHO
-		/*if(adc_val(3) > 256) {
-			// top 4 bits and bottom 4 bits
-			freq.array[2] = ((adc_val(0) >> 2) & 0xF0) | (adc_val(2) >> 6);
-			freq.array[1] = ((adc_val(2) << 4) & 0xFD) | (adc_val(1) >> 8);
-			freq.array[0] = adc_val(1);
-		} else {*/
-			freq.array[2] = adc_val(0) >> 2;
-			freq.array[1] = adc_val(2) >> 2;
-			freq.array[0] = adc_val(1) >> 2;
+	
+		/* one pot freq control */
+		freq[0].uint32_t = ((uint32_t)adc_val(0)) << 12;
+		freq[1].uint32_t = ((uint32_t)adc_val(2)) << 12;
+		freq[2].uint32_t = ((uint32_t)adc_val(1)) << 12;
+		
+		
+		/* three pot freq control
+		freq.array[2] = adc_val(0) >> 2;
+		freq.array[1] = adc_val(2) >> 2;
+		freq.array[0] = adc_val(1) >> 2;
 
-			if(freq.uint32_t > 0xA3D000) freq.uint32_t = 0xA3D000; //max freq
-			else if(freq.uint32_t < 0x2000) freq.uint32_t = 0x2000; //min freq
-		//}
+		if(freq.uint32_t > 0xA3D000) freq.uint32_t = 0xA3D000; //max freq
+		else if(freq.uint32_t < 0x2000) freq.uint32_t = 0x2000; //min freq
+		*/
 
-		//set freq range from 0x2000 to 0xA3D000
-		//freq.uint32_t = 0x2000 + (uint32_t)adc_val(1) + (uint32_t)(adc_val(2) << 10) + (uint32_t)(adc_val(0) << 20);
-		//if(freq.uint32_t > 0xA3D000) freq.uint32_t = 0xA3D000;
 	#endif
 
 	adc_trigger();
