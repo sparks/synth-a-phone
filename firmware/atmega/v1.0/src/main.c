@@ -65,8 +65,15 @@ int main(void) {
 					hif_output += apply_env(env, triangle(freq.array[2]));
 				}
 			#else
-				//Just a sine
-				hif_output += sine(&sine1, freq[0]);
+				//compare just look up table vs linear interpolation
+				if(adc_val(2) < (500)) {
+					//only look up table
+					hif_output += sine(&sine1, freq[0]);
+
+				} else {
+					//sine with linear interpolation
+					hif_output += sine_interpolated(&sine2, freq[0]);
+				}
 
 				// Stacked wave.
 				//hif_output += triangle(freq[2]<<2)>>1;

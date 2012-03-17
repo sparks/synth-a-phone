@@ -64,3 +64,6 @@ int16_t pulse(uint16_t freq);
  * \return the next wave value.
 */
 int16_t sine(audio_index_t *ramp, audio_index_t freq);
+
+int16_t sine_interpolated(audio_index_t *ramp, audio_index_t freq);
+

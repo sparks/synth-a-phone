@@ -95,6 +95,12 @@ int16_t pulse(uint16_t freq) {
 }
 
 int16_t sine(audio_index_t *ramp, audio_index_t freq) {
+	add_audio_index((*ramp), freq);
+
+	return pgm_read_word(&(sine_lookup[(*ramp).uint32_t >> INDEX_SHIFT]));
+}
+
+int16_t sine_interpolated(audio_index_t *ramp, audio_index_t freq) {
 	int16_t val1, val2;
 	uint32_t index;
 
