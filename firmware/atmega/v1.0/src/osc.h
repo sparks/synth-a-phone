@@ -29,6 +29,8 @@ typedef union {
 /**
  * Initialises various variables and tables for the oscillators.
  *
+ * (as of now, it is an empty method)
+ *
 */
 void osc_init(void);
 
@@ -57,13 +59,22 @@ int16_t triangle(uint16_t freq);
 int16_t pulse(uint16_t freq);
 
 /**
- * Takes as input 24 bit (8x3 array) freq (period) encoded inside a 32bit int using the audio_index_t type.
- * ramp_sin is incremented by freq and the last byte is used in the look up table to get the sine value.
+ * Takes as input a pointer to a "sine ramp" and freq (period), both are 24 bit (8x3 array) encoded inside a 32bit int using the audio_index_t type.
+ * ramp is incremented by freq and the last bits (8 - 13, depending on the size of the wavetable) are used in the look up table to get the sine value.
  *
+ * \param ramp the sine ramp which is used to index the look up table.
  * \param freq the frequency increment.
  * \return the next wave value.
 */
 int16_t sine(audio_index_t *ramp, audio_index_t freq);
 
+/**
+ * Takes as input a pointer to a "sine ramp" and freq (period), both are 24 bit (8x3 array) encoded inside a 32bit int using the audio_index_t type.
+ * ramp is incremented by freq and the last bits (8 - 13, depending on the size of the wavetable) are used in the look up table to get the sine value.
+ * A simple linear interpolation is done to improve the quality of the signal; however this takes more time to compute.
+ *
+ * \param ramp the sine ramp which is used to index the look up table.
+ * \param freq the frequency increment.
+ * \return the next wave value.
+*/
 int16_t sine_interpolated(audio_index_t *ramp, audio_index_t freq);
-
