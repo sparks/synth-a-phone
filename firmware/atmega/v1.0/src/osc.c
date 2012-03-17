@@ -9,15 +9,30 @@
 #include <math.h>
 #include <avr/pgmspace.h>
 
-/** The wavetable length */
-#define WAVETABLE_WIDTH 8192 
+/** The wavetable size */
+#define WAVETABLE_BITS 13
 
-#if WAVETABLE_WIDTH == 2048
-	#include "wavetable_sin2048.h"
-#elif WAVETABLE_WIDTH == 4096
-	#include "wavetable_sin4096.h"
-#elif WAVETABLE_WIDTH == 8192
-	#include "wavetable_sin8192.h"
+/* properties depending on the wavetable size */
+#if WAVETABLE_BITS == 11
+	#include		"wavetable_sin2048.h"
+	#define WAVETABLE_WIDTH	2048
+	#define INDEX_MASK	0x3FF800
+	#define INDEX_MAX	0x7FF
+	#define INDEX_SHIFT	13
+
+#elif WAVETABLE_BITS == 12
+	#include		"wavetable_sin4096.h"
+	#define WAVETABLE_WIDTH 4096 
+	#define INDEX_MASK 	0xFFF000
+	#define INDEX_MAX 	0xFFF;
+	#define INDEX_SHIFT	12;
+
+#elif WAVETABLE_BITS == 13
+	#include		"wavetable_sin8192.h"
+	#define WAVETABLE_WIDTH	8192
+	#define INDEX_MASK	0x1FFF000
+	#define INDEX_MAX	0x1FFF
+	#define INDEX_SHIFT	11
 #endif
  
 /** Mmmm pie */
@@ -85,39 +100,17 @@ int16_t sine(audio_index_t freq) {
 
 	add_audio_index(ramp_sin, freq);
 
-	#if WAVETABLE_WIDTH == 2048
-		index = ramp_sin.uint32_t >> 13;
-		val1 = pgm_read_word(&(sine_lookup[index]));
+	// linear interpolation:
+	// F(x) = F(x1) + (x - x1) * (F(x2) - F(x1)/(x2 - x1)
+	index = ramp_sin.uint32_t >> INDEX_SHIFT;
+	val1 = pgm_read_word(&(sine_lookup[index]));
 
-		if(index == 0x7FF) index = 0;
-		else index++;
+	if(index == INDEX_MAX) index = 0;
+	else index++;
 
-		val2 = pgm_read_word(&(sine_lookup[index]));
-	
-		return val1+((((signed)(ramp_sin.uint32_t - (ramp_sin.uint32_t & 0x3FF800)))*(val1 - val2))/WAVETABLE_WIDTH);	//div instead of shift to guarantee arithmetic shift
+	val2 = pgm_read_word(&(sine_lookup[index]));
 
-	#elif WAVETABLE_WIDTH == 4096
-		index = ramp_sin.uint32_t >> 12;
-		val1 = pgm_read_word(&(sine_lookup[index]));
-
-		if(index == 0xFFF) index = 0;
-		else index++;
-
-		val2 = pgm_read_word(&(sine_lookup[index]));
-	
-		return val1+((((signed)(ramp_sin.uint32_t - (ramp_sin.uint32_t & 0xFFF000)))*(val1 - val2))/WAVETABLE_WIDTH);	//div instead of shift to guarantee arithmetic shift
-
-	#elif WAVETABLE_WIDTH == 8192
-		index = ramp_sin.uint32_t >> 11;
-		val1 = pgm_read_word(&(sine_lookup[index]));
-
-		if(index == 0x1FFF) index = 0;
-		else index++;
-
-		val2 = pgm_read_word(&(sine_lookup[index]));
-	
-		return val1+((((signed)(ramp_sin.uint32_t - (ramp_sin.uint32_t & 0x1FFF000)))*(val1 - val2))/WAVETABLE_WIDTH);	//div instead of shift to guarantee arithmetic shift
+	return val1+((((signed)(ramp_sin.uint32_t - (ramp_sin.uint32_t & INDEX_MASK)))*(val2 - val1))/WAVETABLE_WIDTH);	//div instead of shift to guarantee arithmetic shift
 		
-	#endif
 }
 
