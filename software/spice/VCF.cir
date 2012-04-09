@@ -2,12 +2,12 @@ VCF
 
 Vin 1 0 AC 50m
 
-Xstage1 1 2 3 stage
-Xstage2 2 3 4 stage
-Xstage3 3 4 5 stage
-Xstage4 4 5 0 stage
+Xstage1 1 2 3 0 stage
+Xstage2 2 3 4 0 stage
+Xstage3 3 4 5 0 stage
+Xstage4 4 5 0 0 stage
 
-.subckt stage 3 8 12
+.subckt stage 3 8 12 0
 VDD 1 0 DC 2.5
 VSS 2 0 DC -2.5
 
