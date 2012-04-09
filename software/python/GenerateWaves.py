@@ -75,50 +75,50 @@ f.close()
 # If generating at least 4 octaves, you can uncomment everything below to visualize the wavetables as a plot
 
 # plot.subplot(4, 4, 1)
-# plot.plot(sine[0], 'b.')
+# plot.plot(sine[0], 'b-')
 
 # plot.subplot(4, 4, 2)
-# plot.plot(sine[1], 'b.')
+# plot.plot(triangle[0], 'r-')
 
 # plot.subplot(4, 4, 3)
-# plot.plot(sine[2], 'b.')
+# plot.plot(sawtooth[0], 'g-')
 
 # plot.subplot(4, 4, 4)
-# plot.plot(sine[3], 'b.')
+# plot.plot(square[0], 'k-')
 
 # plot.subplot(4, 4, 5)
-# plot.plot(triangle[0], 'g')
+# plot.plot(sine[1], 'b-')
 
 # plot.subplot(4, 4, 6)
-# plot.plot(triangle[1], 'g')
+# plot.plot(triangle[1], 'r-')
 
 # plot.subplot(4, 4, 7)
-# plot.plot(triangle[2], 'g')
+# plot.plot(sawtooth[1], 'g-')
 
 # plot.subplot(4, 4, 8)
-# plot.plot(triangle[3], 'g')
+# plot.plot(square[1], 'k-')
 
 # plot.subplot(4, 4, 9)
-# plot.plot(sawtooth[0], 'r')
+# plot.plot(sine[2], 'b-')
 
 # plot.subplot(4, 4, 10)
-# plot.plot(sawtooth[1], 'r')
+# plot.plot(triangle[2], 'r-')
 
 # plot.subplot(4, 4, 11)
-# plot.plot(sawtooth[2], 'r')
+# plot.plot(sawtooth[2], 'g-')
 
 # plot.subplot(4, 4, 12)
-# plot.plot(sawtooth[3], 'r')
+# plot.plot(square[2], 'k-')
 
 # plot.subplot(4, 4, 13)
-# plot.plot(square[0], 'k')
+# plot.plot(sine[3], 'b-')
 
 # plot.subplot(4, 4, 14)
-# plot.plot(square[1], 'k')
+# plot.plot(triangle[3], 'r-')
 
 # plot.subplot(4, 4, 15)
-# plot.plot(square[2], 'k')
+# plot.plot(sawtooth[3], 'g-')
 
 # plot.subplot(4, 4, 16)
-# plot.plot(square[3], 'k')
+# plot.plot(square[3], 'k-')
 # plot.show()
