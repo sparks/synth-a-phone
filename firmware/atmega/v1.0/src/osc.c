@@ -104,7 +104,7 @@ int16_t sawtooth_table(audio_index_t freq) {
 
 	add_audio_index(saw_ramp_table, freq);	
 	
-	return pgm_read_word(&(saw_ramp_tablei[table][saw_ramp_table.array[2]]));
+	return pgm_read_word(&(saw_lookup[table][saw_ramp_table.array[2]]));
 }
 
 int16_t triangle(uint16_t freq) {
