@@ -43,7 +43,6 @@
 /** Mmmm pie */
 #define PI 3.14159265
 
-
 int16_t saw_ramp = 0;
 
 uint8_t tri_direction = 0;
@@ -51,8 +50,6 @@ int16_t tri_ramp = 0;
 
 int16_t pulse_value = 0;
 uint16_t pulse_ramp = 0;
-
-audio_index_t ramp_sin;
 
 /* new wave table ramps */
 audio_index_t saw_ramp_table;
@@ -67,15 +64,6 @@ void osc_init(void) {
 	for(i = 0; i < 12; i++){
 		tables[i] = 8*pow(2,i)/(31250.0/16777216.0);
 	}
-	
-	//init ramp_sin
-	ramp_sin.uint32_t = 0;
-
-	/*for (i = 0; i < WAVETABLE_WIDTH; i++) {
-		// creates a lookup table of one wavelength of sine of WAVETABLE_WIDTH
-		// multiplied by the halfwidth of the 12bit dac
-		sine_lookup[i] = (int16_t)(2047*(sin((i * 2 * PI) / WAVETABLE_WIDTH)));
-	}*/
 }
 
 int16_t sawtooth(uint16_t freq) {
@@ -141,6 +129,8 @@ int16_t sine(audio_index_t *ramp, audio_index_t freq) {
 int16_t sine_interpolated(audio_index_t *ramp, audio_index_t freq) {
 	int16_t val1, val2;
 	uint32_t index;
+
+	freq.uint32_t = freq.uint32_t >> 2;
 
 	add_audio_index((*ramp), freq);
 
