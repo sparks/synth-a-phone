@@ -41,6 +41,8 @@ void osc_init(void);
  * \return the next wave value.
 */
 int16_t sawtooth(uint16_t freq);
+int16_t sawtooth_index(audio_index_t freq);
+int16_t sawtooth_table(audio_index_t freq);
 
 /**
  * Returns a exact triangle, not band limited, computed on the fly.

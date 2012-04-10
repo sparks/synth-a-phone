@@ -8,8 +8,8 @@
 #include "adc.h"
 #include "dac.h"
 #include "timer.h"
-#include "uart.h"
-#include "midi.h"
+//#include "uart.h"
+//#include "midi.h"
 
 #include "adsr.h"
 #include "osc.h"
@@ -40,10 +40,10 @@ int main(void) {
 
 	adc_init();
 	dac_init();
-	adsr_init();
+	//adsr_init();
 	
-	midi_init();
-	osc_init();
+	//midi_init();
+	//osc_init();
 
 	//initialize sines
 	audio_index_t sine1, sine2;
@@ -66,6 +66,7 @@ int main(void) {
 				}
 			#else
 				//compare just look up table vs linear interpolation
+				/*
 				if(adc_val(2) < (500)) {
 					//only look up table
 					hif_output += sine(&sine1, freq[0]);
@@ -74,7 +75,9 @@ int main(void) {
 					//sine with linear interpolation
 					hif_output += sine_interpolated(&sine2, freq[0]);
 				}
+				*/
 
+				hif_output += sawtooth_table(freq[0]);
 				// Stacked wave.
 				//hif_output += triangle(freq[2]<<2)>>1;
 			

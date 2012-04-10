@@ -10,7 +10,7 @@
 #include <avr/pgmspace.h>
 
 /** The wavetable size */
-#define WAVETABLE_BITS 13
+#define WAVETABLE_BITS 11
 
 /* properties depending on the wavetable size */
 #if WAVETABLE_BITS == 11
@@ -34,7 +34,12 @@
 	#define INDEX_MAX	0x1FFF
 	#define INDEX_SHIFT	11
 #endif
- 
+
+/* insert some more wavetables */
+#include "wavetable_saw256.h"
+#include "wavetable_tri256.h"
+#include "wavetable_sqr256.h"
+
 /** Mmmm pie */
 #define PI 3.14159265
 
@@ -49,8 +54,19 @@ uint16_t pulse_ramp = 0;
 
 audio_index_t ramp_sin;
 
+/* new wave table ramps */
+audio_index_t saw_ramp_table;
+audio_index_t tri_ramp_table;
+audio_index_t sqr_ramp_table;
+
+int tables[12];	//to determine which table to use 
+
 void osc_init(void) {
-	//int i;
+	int i;
+
+	for(i = 0; i < 12; i++){
+		tables[i] = 8*pow(2,i)/(31250.0/16777216.0);
+	}
 	
 	//init ramp_sin
 	ramp_sin.uint32_t = 0;
@@ -67,6 +83,28 @@ int16_t sawtooth(uint16_t freq) {
 	if(saw_ramp > 2047) saw_ramp = -2048;
 
 	return saw_ramp;
+}
+
+int16_t sawtooth_index(audio_index_t freq) {
+	int16_t output = -2048;
+
+	add_audio_index(saw_ramp_table, freq);
+	
+	if((saw_ramp_table.uint32_t >> 12) > 4095) saw_ramp_table.uint32_t = 0;  
+	return output + (saw_ramp_table.uint32_t >> 12);
+}
+
+int16_t sawtooth_table(audio_index_t freq) {
+	int i;
+	int table = 0; //which table to use
+
+	for(i = 0; i < 12; i++) {
+		if(freq.uint32_t < tables[i]) table = i;
+	}
+
+	add_audio_index(saw_ramp_table, freq);	
+	
+	return pgm_read_word(&(saw_ramp_tablei[table][saw_ramp_table.array[2]]));
 }
 
 int16_t triangle(uint16_t freq) {
