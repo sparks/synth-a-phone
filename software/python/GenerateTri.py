@@ -21,7 +21,8 @@ for i in range(len(base_freq)):
 		for k in range(1,max_k):
 			#print(k)
 			if k%2  != 0:
-				term += (((-1)**((k-1)/2))/(k**2))*math.sin(math.pi*2*k*j/length)
+				print 
+				term += float((-1)**((k-1)/2))/k**2*math.sin(math.pi*2*k*j/length)
 				#term +=((-1)**((k-1)/2))*math.sin(float(math.pi*2*k*j)/length)
 		tables[i].append((int(round((amp*((8/(math.pi**2))*term))))))
 
