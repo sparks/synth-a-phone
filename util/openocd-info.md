@@ -4,11 +4,11 @@ How To Install and Use OpenOCD
 <p>Open source tools are used when possible</p>
 <p>Open OCD and the other tools used will likely have dependencies which your system may or may not have - I advise you to read their respective READMEs</p>
 
-OS X
+# OS X
 ____
 
 
 
-Linux
+# Linux
 _____
 
