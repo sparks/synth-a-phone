@@ -68,26 +68,27 @@ Compiling - Running - Debugging a Test Program
 
 <p>Next, I'll just copy paste the instructions from Pat Hickey's repo:<p>
 To check that openocd connects to the chip and flash the program:
-> * Run openocd from a terminal at repository root (openocd.cfg present)
-* In another terminal
-  <pre><code>$ telnet localhost 4444</code></pre>
-* In telnet session, the following commands will flash the chip with the program built in the simple/ directory:
-  <pre><code>> halt
-  > flash write_image simple/simple.elf
-  > reset run
-  > exit</code></pre>
-* There seem to be issues with using "reset halt" to reset the SAM3 target. To reset the whole chip, write directly to the AIRCR system register with "mww 0xE000ED0C 0x05FA0007" For more info, see Section B.2.6 of the ARMv7-M Architecture Reference Manual.
+>  * Run openocd from a terminal at repository root (openocd.cfg present)
+>  * In another terminal
+>  <pre><code>$ telnet localhost 4444</code></pre>
+>  * In telnet session, the following commands will flash the chip with the program built in the simple/ directory:
+>  <pre><code>> halt
+>  > flash write_image simple/simple.elf
+>  > reset run
+>  > exit</code></pre>
+>  * There seem to be issues with using "reset halt" to reset the SAM3 target. To reset the whole chip, write directly to the AIRCR system register with "mww 0xE000ED0C 0x05FA0007" For more info, see Section B.2.6 of the ARMv7-M Architecture Reference Manual.
 
 To use openocd to debug simple.elf via gdb:
-> * As before, run openocd from a terminal at the repository root
-* In another terminal in simple/, run $ arm-none-eabi-gdb simple.elf
-* In gdb:
-  <pre><code>(gdb) target remote :3333
-  (gdb) monitor halt
-  (gdb) load
-  (gdb) break main
-  (gdb) continue
-  ...
-  Breakpoint 1, main () at simple.c:...
-  (gdb) continue</code></pre>
-* If gdb refuses to connect, follow the instructions above to connect to openocd via telnet, use just the "halt" command, then exit telnet. After that gdb should connect fine.
+>  * As before, run openocd from a terminal at the repository root
+>  * In another terminal in simple/, run 
+>  <pre><code>$ arm-none-eabi-gdb simple.elf</code></pre>
+>  * In gdb:
+>  <pre><code>(gdb) target remote :3333
+>  (gdb) monitor halt
+>  (gdb) load
+>  (gdb) break main
+>  (gdb) continue
+>  ...
+>  Breakpoint 1, main () at simple.c:...
+>  (gdb) continue</code></pre>
+>  * If gdb refuses to connect, follow the instructions above to connect to openocd via telnet, use just the "halt" command, then exit telnet. After that gdb should connect fine.
